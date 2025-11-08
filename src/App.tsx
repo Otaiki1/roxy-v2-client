@@ -7,8 +7,27 @@ import { Leaderboard } from "@/pages/Leaderboard";
 import { Guilds } from "@/pages/Guilds";
 import { Navbar } from "@/components/Navbar";
 import { CanvasBackground } from "@/components/CanvasBackground";
+import { featureFlags } from "@/config/featureFlags";
+import {
+    ArcadeNavbar,
+    CanvasBackgroundPIXI,
+    GameHUD,
+    GameSoundManager,
+} from "@/components/game";
 
 function App() {
+    const BackgroundComponent = featureFlags.USE_PIXI_BACKGROUND
+        ? CanvasBackgroundPIXI
+        : CanvasBackground;
+
+    const NavigationComponent = featureFlags.USE_ARCADE_NAV
+        ? ArcadeNavbar
+        : Navbar;
+
+    const contentWrapperClass = featureFlags.USE_ARCADE_NAV
+        ? "relative z-10"
+        : "relative z-10 lg:ml-64";
+
     return (
         <Router>
             <div className="min-h-screen bg-background text-text">
@@ -18,8 +37,10 @@ function App() {
                         path="/app/*"
                         element={
                             <>
-                                <CanvasBackground />
-                                <div className="relative z-10 lg:ml-64">
+                                <BackgroundComponent />
+                                {featureFlags.USE_GAME_HUD && <GameHUD />}
+                                <GameSoundManager muted />
+                                <div className={contentWrapperClass}>
                                     <Routes>
                                         <Route
                                             path="/"
@@ -43,7 +64,7 @@ function App() {
                                         />
                                     </Routes>
                                 </div>
-                                <Navbar />
+                                <NavigationComponent />
                             </>
                         }
                     />

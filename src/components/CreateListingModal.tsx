@@ -60,14 +60,16 @@ export function CreateListingModal({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style={{ backgroundColor: 'rgba(11, 14, 20, 0.9)' }}
                 onClick={onClose}
             >
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="bg-card border-2 border-primary w-full max-w-md p-6"
+                    className="border-2 w-full max-w-md p-6"
+                    style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-primary)' }}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
@@ -87,20 +89,21 @@ export function CreateListingModal({
                         </div>
                         <button
                             onClick={onClose}
-                            className="text-white hover:text-accent transition-none"
+                            className="transition-colors"
+                            style={{ color: 'var(--color-text-body)' }}
                         >
                             <X size={20} />
                         </button>
                     </div>
 
                     {/* Requirements Check */}
-                    <div className="bg-black border-2 border-white p-4 mb-6">
-                        <p className="text-xs font-mono-brutal text-white mb-2">
+                    <div className="border-2 p-4 mb-6" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
+                        <p className="text-xs font-mono-brutal mb-2" style={{ color: 'var(--color-text-body)' }}>
                             REQUIREMENTS
                         </p>
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <span className="font-mono-brutal text-white">
+                                <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     EARNED POINTS
                                 </span>
                                 <span
@@ -114,7 +117,7 @@ export function CreateListingModal({
                                 </span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="font-mono-brutal text-white">
+                                <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     LISTING FEE
                                 </span>
                                 <span className="font-brutal text-primary">
@@ -126,7 +129,7 @@ export function CreateListingModal({
 
                     {/* Points Input */}
                     <div className="mb-6">
-                        <label className="block text-sm font-brutal text-white mb-2">
+                        <label className="block text-sm font-brutal mb-2" style={{ color: 'var(--color-text)' }}>
                             POINTS TO SELL
                         </label>
                         <input
@@ -140,16 +143,17 @@ export function CreateListingModal({
                             min="1"
                             max={userPoints}
                             step="1"
-                            className="w-full bg-black border-2 border-white px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
+                            className="w-full border-2 px-4 py-3 focus:outline-none focus:border-primary font-mono-brutal"
+                            style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
                         />
-                        <p className="text-xs font-mono-brutal text-white mt-2">
+                        <p className="text-xs font-mono-brutal mt-2" style={{ color: 'var(--color-text-body)' }}>
                             Available: {formatPoints(userPoints)}
                         </p>
                     </div>
 
                     {/* Price Input */}
                     <div className="mb-6">
-                        <label className="block text-sm font-brutal text-white mb-2">
+                        <label className="block text-sm font-brutal mb-2" style={{ color: 'var(--color-text)' }}>
                             PRICE (STX)
                         </label>
                         <input
@@ -162,10 +166,11 @@ export function CreateListingModal({
                             placeholder="0.00"
                             min="0.01"
                             step="0.01"
-                            className="w-full bg-black border-2 border-white px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
+                            className="w-full border-2 px-4 py-3 focus:outline-none focus:border-primary font-mono-brutal"
+                            style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
                         />
                         {numPoints > 0 && numPriceStx > 0 && (
-                            <p className="text-xs font-mono-brutal text-white mt-2">
+                            <p className="text-xs font-mono-brutal mt-2" style={{ color: 'var(--color-text-body)' }}>
                                 Price per point:{" "}
                                 {formatStx(
                                     (numPriceStx * 1000000) / numPoints / 1000
@@ -177,40 +182,40 @@ export function CreateListingModal({
 
                     {/* Cost Summary */}
                     {numPoints > 0 && numPriceStx > 0 && (
-                        <div className="bg-primary/20 border border-primary p-4 mb-6">
-                            <p className="text-xs font-mono-brutal text-white mb-2">
+                        <div className="border p-4 mb-6" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-primary)' }}>
+                            <p className="text-xs font-mono-brutal mb-2" style={{ color: 'var(--color-text-body)' }}>
                                 LISTING SUMMARY
                             </p>
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         POINTS TO LIST
                                     </span>
-                                    <span className="font-brutal text-white">
+                                    <span className="font-brutal" style={{ color: 'var(--color-text)' }}>
                                         {formatPoints(numPoints)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         TOTAL PRICE
                                     </span>
                                     <span className="font-brutal text-primary text-lg">
                                         {formatStx(numPriceStx)}
                                     </span>
                                 </div>
-                                <div className="flex justify-between items-center border-t border-primary pt-2">
-                                    <span className="font-mono-brutal text-white">
+                                <div className="flex justify-between items-center border-t pt-2" style={{ borderColor: 'var(--color-primary)' }}>
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         LISTING FEE
                                     </span>
-                                    <span className="font-brutal text-accent">
+                                    <span className="font-brutal" style={{ color: 'var(--color-text-muted)' }}>
                                         {formatStx(listingFee / 1000000)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         PROTOCOL FEE (ON SALE)
                                     </span>
-                                    <span className="font-brutal text-white">
+                                    <span className="font-brutal" style={{ color: 'var(--color-text)' }}>
                                         {((numPriceStx * protocolFeeBps) / 10000).toFixed(2)} STX
                                     </span>
                                 </div>
@@ -219,7 +224,7 @@ export function CreateListingModal({
                     )}
 
                     {error && (
-                        <div className="bg-danger/20 border border-danger p-3 mb-6">
+                        <div className="border p-3 mb-6" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-danger)' }}>
                             <p className="text-sm font-brutal text-danger">{error}</p>
                         </div>
                     )}
@@ -228,7 +233,7 @@ export function CreateListingModal({
                     <div className="flex gap-3">
                         <button
                             onClick={onClose}
-                            className="flex-1 py-3 px-4 bg-black text-white border-2 border-white font-brutal hover:bg-white hover:text-black transition-none"
+                            className="flex-1 py-3 px-4 btn-secondary"
                         >
                             CANCEL
                         </button>

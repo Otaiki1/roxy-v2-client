@@ -1,67 +1,33 @@
 @import "tailwindcss";
 
 @theme {
-    /* Digital Arcade Brutalism Color Palette */
+    /* Dark UI · High Contrast · Competitive Color Palette */
 
-    /* Primary - Cyber Green (#00FFC3) */
-    --color-primary: #00ffc3;
-    --color-primary-50: oklch(0.98 0.03 180);
-    --color-primary-100: oklch(0.95 0.06 180);
-    --color-primary-200: oklch(0.9 0.1 180);
-    --color-primary-300: oklch(0.8 0.15 180);
-    --color-primary-400: oklch(0.7 0.2 180);
-    --color-primary-500: #00ffc3;
-    --color-primary-600: oklch(0.55 0.18 180);
-    --color-primary-700: oklch(0.45 0.15 180);
-    --color-primary-800: oklch(0.35 0.12 180);
-    --color-primary-900: oklch(0.25 0.08 180);
-    --color-primary-950: oklch(0.15 0.05 180);
+    /* Base (UI Structure) */
+    --color-background: #0B0E14; /* background.app */
+    --color-card: #121826; /* background.card */
+    --color-elevated: #161C2E; /* background.elevated */
+    --color-border: #222A3A; /* border.default */
 
-    /* Accent - Magenta/Pink (#FF007A) */
-    --color-accent: #ff007a;
-    --color-accent-50: oklch(0.98 0.05 50);
-    --color-accent-100: oklch(0.95 0.08 50);
-    --color-accent-200: oklch(0.9 0.12 50);
-    --color-accent-300: oklch(0.85 0.15 50);
-    --color-accent-400: oklch(0.75 0.18 50);
-    --color-accent-500: #ff007a;
-    --color-accent-600: oklch(0.6 0.18 50);
-    --color-accent-700: oklch(0.5 0.15 50);
-    --color-accent-800: oklch(0.4 0.12 50);
-    --color-accent-900: oklch(0.3 0.08 50);
-    --color-accent-950: oklch(0.2 0.05 50);
+    /* Text */
+    --color-text: #E6E9F0; /* text.primary */
+    --color-text-headline: #E6E9F0; /* text.primary */
+    --color-text-body: #9BA4C0; /* text.secondary */
+    --color-text-muted: #6B7391; /* text.muted */
+    --color-text-disabled: #4A5168; /* text.disabled */
 
-    /* Danger - Red (#FF5555) */
-    --color-danger: #ff5555;
-    --color-danger-50: oklch(0.98 0.05 10);
-    --color-danger-100: oklch(0.95 0.08 10);
-    --color-danger-200: oklch(0.9 0.12 10);
-    --color-danger-300: oklch(0.85 0.15 10);
-    --color-danger-400: oklch(0.75 0.18 10);
-    --color-danger-500: #ff5555;
-    --color-danger-600: oklch(0.6 0.18 10);
-    --color-danger-700: oklch(0.5 0.15 10);
-    --color-danger-800: oklch(0.4 0.12 10);
-    --color-danger-900: oklch(0.3 0.08 10);
-    --color-danger-950: oklch(0.2 0.05 10);
+    /* Semantic Colours (Meaning-Based) */
+    --color-primary: #16F5D0; /* primary.action - Teal for actions */
+    --color-accent: #FF2D95; /* metric.performance - Pink for performance/rank */
+    --color-success: #3DFF9A; /* status.success - Green for wins/YES */
+    --color-danger: #FF5C5C; /* status.danger - Red for losses/NO */
+    --color-neutral: #6B7391; /* status.neutral - Grey for inactive */
 
-    /* Background & Surface Colors */
-    --color-background: #050505;
-    --color-card: #111111;
-    --color-border: #333333;
-    --color-divider: #333333;
-
-    /* Text Colors */
-    --color-text: #e2e8f0;
-    --color-text-headline: #e2e8f0;
-    --color-text-body: #e2e8f0;
-    --color-text-muted: #999999;
-
-    /* Utility Colors */
-    --color-muted: #d6d6d6;
-    --color-success: #19c27c;
-    --color-warning: #f47c2a;
-    --color-info: #19c27c;
+    /* Legacy aliases for compatibility */
+    --color-text-secondary: #9BA4C0;
+    --color-muted: #6B7391;
+    --color-warning: #FF5C5C;
+    --color-info: #16F5D0;
 
     /* Brutalist Spacing - No subtle spacing */
     --spacing-xs: 0.5rem;
@@ -210,13 +176,13 @@ body {
     letter-spacing: 0.05em;
 }
 
-/* Digital Arcade Brutalism Borders - Thin, clean borders */
+/* Borders */
 .border-brutal {
-    border: 1px solid var(--color-text);
+    border: 1px solid var(--color-border);
 }
 
 .border-brutal-thick {
-    border: 2px solid var(--color-text);
+    border: 2px solid var(--color-border);
 }
 
 .border-brutal-primary {
@@ -227,40 +193,24 @@ body {
     border: 1px solid var(--color-accent);
 }
 
+.border-brutal-success {
+    border: 1px solid var(--color-success);
+}
+
+.border-brutal-danger {
+    border: 1px solid var(--color-danger);
+}
+
 .border-brutal-divider {
     border: 1px solid var(--color-border);
 }
 
-/* Arcade Neon Borders */
-.border-neon-primary {
-    border: 2px solid var(--color-primary);
-    box-shadow: 0 0 10px var(--color-primary), inset 0 0 10px var(--color-primary);
-}
+/* No neon effects - removed per design guide */
 
-.border-neon-accent {
-    border: 2px solid var(--color-accent);
-    box-shadow: 0 0 10px var(--color-accent), inset 0 0 10px var(--color-accent);
-}
-
-.border-neon-pulse {
-    animation: neon-pulse 2s ease-in-out infinite;
-}
-
-@keyframes neon-pulse {
-    0%, 100% {
-        box-shadow: 0 0 10px var(--color-primary), inset 0 0 10px var(--color-primary);
-        opacity: 1;
-    }
-    50% {
-        box-shadow: 0 0 20px var(--color-primary), 0 0 30px var(--color-primary), inset 0 0 20px var(--color-primary);
-        opacity: 0.8;
-    }
-}
-
-/* Brutalist backgrounds - Solid, high contrast */
+/* Background utilities */
 .bg-brutal {
-    background: var(--color-text);
-    color: var(--color-background);
+    background: var(--color-card);
+    color: var(--color-text);
 }
 
 .bg-brutal-primary {
@@ -270,7 +220,17 @@ body {
 
 .bg-brutal-accent {
     background: var(--color-accent);
-    color: var(--color-text);
+    color: var(--color-background);
+}
+
+.bg-brutal-success {
+    background: var(--color-success);
+    color: var(--color-background);
+}
+
+.bg-brutal-danger {
+    background: var(--color-danger);
+    color: var(--color-background);
 }
 
 /* Brutalist text effects */
@@ -290,7 +250,7 @@ body {
     text-shadow: 4px 4px 0px var(--color-accent);
 }
 
-/* Digital Arcade Brutalism Buttons */
+/* Primary Button - One action per screen */
 .btn-brutal {
     background: var(--color-primary);
     color: var(--color-background);
@@ -300,18 +260,24 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    transition: none;
+    transition: background-color 0.2s;
 }
 
 .btn-brutal:hover {
-    opacity: 0.9;
-    transform: none;
+    background: #12D4B8; /* Darker teal on hover */
 }
 
 .btn-brutal:active {
-    opacity: 0.8;
+    background: #0FB3A0;
 }
 
+.btn-brutal:disabled {
+    background: var(--color-elevated);
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+}
+
+/* Destructive Button */
 .btn-danger {
     background: var(--color-danger);
     color: var(--color-background);
@@ -321,11 +287,36 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    transition: none;
+    transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+    background: #E64A4A;
+}
+
+.btn-danger:active {
+    background: #CC3A3A;
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 1rem 2rem;
+    font-family: var(--font-brutal);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--color-elevated);
 }
 
 .btn-muted {
-    background: var(--color-muted);
+    background: var(--color-neutral);
     color: var(--color-background);
     border: none;
     padding: 1rem 2rem;
@@ -333,14 +324,19 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    transition: none;
+    transition: background-color 0.2s;
 }
 
-/* Digital Arcade Brutalism Cards */
+/* Cards & Panels */
 .card-brutal {
     background: var(--color-card);
-    border: 1px solid var(--color-text);
+    border: 1px solid var(--color-border);
     padding: 2rem;
+    transition: background-color 0.2s;
+}
+
+.card-brutal:hover {
+    background: var(--color-elevated);
 }
 
 .card-brutal-primary {
@@ -386,12 +382,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-primary-600);
-    border-radius: var(--radius-full);
+    background: var(--color-border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-primary-500);
+    background: var(--color-text-muted);
 }
 
 /* Desktop-specific styles */

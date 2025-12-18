@@ -66,14 +66,16 @@ export function BuyListingModal({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style={{ backgroundColor: 'rgba(11, 14, 20, 0.9)' }}
                 onClick={onClose}
             >
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="bg-card border-2 border-primary w-full max-w-md p-6"
+                    className="border-2 w-full max-w-md p-6"
+                    style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-primary)' }}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
@@ -93,17 +95,18 @@ export function BuyListingModal({
                         </div>
                         <button
                             onClick={onClose}
-                            className="text-white hover:text-accent transition-none"
+                            className="transition-colors"
+                            style={{ color: 'var(--color-text-body)' }}
                         >
                             <X size={20} />
                         </button>
                     </div>
 
                     {/* Listing Info */}
-                    <div className="bg-black border-2 border-white p-4 mb-6">
+                    <div className="border-2 p-4 mb-6" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-mono-brutal text-white">
+                                <span className="text-sm font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     AVAILABLE POINTS
                                 </span>
                                 <span className="font-brutal text-primary">
@@ -111,7 +114,7 @@ export function BuyListingModal({
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-mono-brutal text-white">
+                                <span className="text-sm font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     TOTAL PRICE
                                 </span>
                                 <span className="font-brutal text-primary">
@@ -119,18 +122,18 @@ export function BuyListingModal({
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-mono-brutal text-white">
+                                <span className="text-sm font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     PRICE PER POINT
                                 </span>
-                                <span className="font-brutal text-accent">
+                                <span className="font-brutal" style={{ color: 'var(--color-accent)' }}>
                                     {formatStx(pricePerPoint)} /pt
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-mono-brutal text-white">
+                                <span className="text-sm font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     SELLER
                                 </span>
-                                <span className="font-brutal text-white">
+                                <span className="font-brutal" style={{ color: 'var(--color-text)' }}>
                                     {listing.seller}
                                 </span>
                             </div>
@@ -139,7 +142,7 @@ export function BuyListingModal({
 
                     {/* Points to Buy Input */}
                     <div className="mb-6">
-                        <label className="block text-sm font-brutal text-white mb-2">
+                        <label className="block text-sm font-brutal mb-2" style={{ color: 'var(--color-text)' }}>
                             POINTS TO BUY
                         </label>
                         <input
@@ -153,9 +156,10 @@ export function BuyListingModal({
                             min="1"
                             max={listing.points}
                             step="1"
-                            className="w-full bg-black border-2 border-white px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
+                            className="w-full border-2 px-4 py-3 focus:outline-none focus:border-primary font-mono-brutal"
+                            style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
                         />
-                        <p className="text-xs font-mono-brutal text-white mt-2">
+                        <p className="text-xs font-mono-brutal mt-2" style={{ color: 'var(--color-text-body)' }}>
                             Max: {formatPoints(listing.points)} (partial purchases allowed)
                         </p>
                         {error && (
@@ -167,21 +171,21 @@ export function BuyListingModal({
 
                     {/* Payment Calculation */}
                     {numPointsToBuy > 0 && (
-                        <div className="bg-primary/20 border border-primary p-4 mb-6">
-                            <p className="text-xs font-mono-brutal text-white mb-2">
+                        <div className="border p-4 mb-6" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-primary)' }}>
+                            <p className="text-xs font-mono-brutal mb-2" style={{ color: 'var(--color-text-body)' }}>
                                 PAYMENT BREAKDOWN
                             </p>
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         POINTS TO BUY
                                     </span>
-                                    <span className="font-brutal text-white">
+                                    <span className="font-brutal" style={{ color: 'var(--color-text)' }}>
                                         {formatPoints(numPointsToBuy)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         BASE PRICE
                                     </span>
                                     <span className="font-brutal text-primary">
@@ -189,24 +193,24 @@ export function BuyListingModal({
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         PROTOCOL FEE (2%)
                                     </span>
-                                    <span className="font-brutal text-accent">
+                                    <span className="font-brutal" style={{ color: 'var(--color-text-muted)' }}>
                                         {formatStx(protocolFee)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="font-mono-brutal text-white">
+                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         SELLER RECEIVES
                                     </span>
                                     <span className="font-brutal text-success">
                                         {formatStx(sellerAmount)}
                                     </span>
                                 </div>
-                                <div className="border-t border-primary pt-2 mt-2">
+                                <div className="border-t pt-2 mt-2" style={{ borderColor: 'var(--color-primary)' }}>
                                     <div className="flex justify-between items-center">
-                                        <span className="font-brutal text-white">
+                                        <span className="font-brutal" style={{ color: 'var(--color-text)' }}>
                                             TOTAL COST
                                         </span>
                                         <span className="font-brutal text-primary text-lg">
@@ -222,7 +226,7 @@ export function BuyListingModal({
                     <div className="flex gap-3">
                         <button
                             onClick={onClose}
-                            className="flex-1 py-3 px-4 bg-black text-white border-2 border-white font-brutal hover:bg-white hover:text-black transition-none"
+                            className="flex-1 py-3 px-4 btn-secondary"
                         >
                             CANCEL
                         </button>

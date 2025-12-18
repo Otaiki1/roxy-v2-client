@@ -118,10 +118,10 @@ export function Portfolio() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
                 <div className="text-center">
                     <div className="w-16 h-16 border-2 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
-                    <p className="font-mono-brutal text-white">LOADING PORTFOLIO...</p>
+                    <p className="font-mono-brutal" style={{ color: 'var(--color-text)' }}>LOADING PORTFOLIO...</p>
                 </div>
             </div>
         );
@@ -137,14 +137,14 @@ export function Portfolio() {
     );
 
     return (
-        <div className="min-h-screen bg-black text-white p-4 pb-20 lg:pb-4">
+        <div className="min-h-screen p-4 pb-20 lg:pb-4" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-6">
                     <h1 className="text-2xl font-brutal text-primary mb-2">
                         PORTFOLIO
                     </h1>
-                    <p className="font-mono-brutal text-white">
+                    <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                         YOUR PREDICTIONS, STAKES, AND LISTINGS
                     </p>
                 </div>
@@ -164,10 +164,10 @@ export function Portfolio() {
                                 TOTAL POINTS EARNED
                             </p>
 
-                            <div className="bg-black border-2 border-white p-4 mb-4">
+                            <div className="border-2 p-4 mb-4" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <span className="font-mono-brutal text-white">
+                                        <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                             CURRENT BALANCE
                                         </span>
                                         <span className="font-brutal text-primary">
@@ -175,10 +175,10 @@ export function Portfolio() {
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="font-mono-brutal text-white">
+                                        <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                             EARNED POINTS
                                         </span>
-                                        <span className="font-brutal text-accent">
+                                        <span className="font-brutal" style={{ color: 'var(--color-text)' }}>
                                             {formatPoints(earnedPoints)}
                                         </span>
                                     </div>
@@ -244,12 +244,13 @@ export function Portfolio() {
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.15 + index * 0.1 }}
-                                        className="bg-black border-2 border-white p-4"
+                                        className="border-2 p-4"
+                                        style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-3 mb-2">
-                                                    <Clock className="text-accent" size={20} />
+                                                    <Clock size={20} style={{ color: 'var(--color-primary)' }} />
                                                     <h4 className="font-brutal text-primary">
                                                         {stake.eventMetadata}
                                                     </h4>
@@ -258,13 +259,17 @@ export function Portfolio() {
                                                     <span
                                                         className={`font-brutal px-2 py-1 border ${
                                                             stake.stakeType === "yes"
-                                                                ? "bg-success/20 border-success text-success"
-                                                                : "bg-danger/20 border-danger text-danger"
+                                                                ? "text-success"
+                                                                : "text-danger"
                                                         }`}
+                                                        style={{ 
+                                                            backgroundColor: stake.stakeType === "yes" ? 'var(--color-elevated)' : 'var(--color-elevated)',
+                                                            borderColor: stake.stakeType === "yes" ? 'var(--color-success)' : 'var(--color-danger)'
+                                                        }}
                                                     >
                                                         {stake.stakeType.toUpperCase()}
                                                     </span>
-                                                    <span className="font-mono-brutal text-white">
+                                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                                         {formatPoints(stake.amount)} STAKED
                                                     </span>
                                                 </div>
@@ -274,12 +279,12 @@ export function Portfolio() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-12 text-white">
+                            <div className="text-center py-12" style={{ color: 'var(--color-text)' }}>
                                 <Target size={48} className="mx-auto mb-4 text-primary" />
                                 <h3 className="text-lg font-brutal mb-2 text-primary">
                                     NO ACTIVE STAKES
                                 </h3>
-                                <p className="font-mono-brutal mb-4">
+                                <p className="font-mono-brutal mb-4" style={{ color: 'var(--color-text-body)' }}>
                                     START STAKING ON EVENTS TO BUILD YOUR PORTFOLIO
                                 </p>
                                 <Link
@@ -316,11 +321,11 @@ export function Portfolio() {
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.25 + index * 0.1 }}
-                                            className={`p-4 border-2 ${
-                                                isWinner
-                                                    ? "bg-success/10 border-success"
-                                                    : "bg-danger/10 border-danger"
-                                            }`}
+                                                    className="p-4 border-2"
+                                                    style={{
+                                                        backgroundColor: isWinner ? 'var(--color-elevated)' : 'var(--color-elevated)',
+                                                        borderColor: isWinner ? 'var(--color-success)' : 'var(--color-danger)'
+                                                    }}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3 flex-1">
@@ -376,8 +381,8 @@ export function Portfolio() {
                                 })}
                             </div>
                         ) : (
-                            <div className="text-center py-8 text-white">
-                                <p className="font-mono-brutal">
+                            <div className="text-center py-8" style={{ color: 'var(--color-text)' }}>
+                                <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     NO RESOLVED PREDICTIONS YET
                                 </p>
                             </div>
@@ -412,7 +417,8 @@ export function Portfolio() {
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.35 + index * 0.1 }}
-                                        className="bg-black border-2 border-white p-4"
+                                        className="border-2 p-4"
+                                        style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}
                                     >
                                         <div className="flex items-center justify-between">
                                             <div>
@@ -420,18 +426,22 @@ export function Portfolio() {
                                                     LISTING #{listing.listingId}
                                                 </h4>
                                                 <div className="flex items-center gap-4 text-sm mt-1">
-                                                    <span className="font-mono-brutal text-white">
+                                                    <span className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                                         {formatPoints(listing.points)} POINTS
                                                     </span>
-                                                    <span className="font-brutal text-accent">
+                                                    <span className="font-brutal text-primary">
                                                         {formatStx(listing.priceStx)}
                                                     </span>
                                                     <span
                                                         className={`font-brutal px-2 py-1 border ${
                                                             listing.active
-                                                                ? "bg-success/20 border-success text-success"
-                                                                : "bg-gray-600 border-gray-600 text-gray-400"
+                                                                ? "text-success"
+                                                                : "text-neutral"
                                                         }`}
+                                                        style={{
+                                                            backgroundColor: 'var(--color-elevated)',
+                                                            borderColor: listing.active ? 'var(--color-success)' : 'var(--color-neutral)'
+                                                        }}
                                                     >
                                                         {listing.active ? "ACTIVE" : "INACTIVE"}
                                                     </span>
@@ -442,8 +452,8 @@ export function Portfolio() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-8 text-white">
-                                <p className="font-mono-brutal mb-4">
+                            <div className="text-center py-8" style={{ color: 'var(--color-text)' }}>
+                                <p className="font-mono-brutal mb-4" style={{ color: 'var(--color-text-body)' }}>
                                     NO LISTINGS YET
                                 </p>
                                 <Link

@@ -137,24 +137,24 @@ export function Markets() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
                 <div className="text-center">
                     <div className="w-16 h-16 border-2 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
-                    <p className="font-mono-brutal text-white">LOADING EVENTS...</p>
+                    <p className="font-mono-brutal" style={{ color: 'var(--color-text)' }}>LOADING EVENTS...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-black text-white p-4 pb-20 lg:pb-4">
+        <div className="min-h-screen p-4 pb-20 lg:pb-4" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-6">
                     <h1 className="text-2xl font-brutal text-primary mb-2">
                         PREDICTION EVENTS
                     </h1>
-                    <p className="font-mono-brutal text-white">
+                    <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                         STAKE POINTS ON YES OR NO OUTCOMES
                     </p>
                 </div>
@@ -163,11 +163,12 @@ export function Markets() {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="card-brutal-primary mb-6 border-primary"
+                    className="card-brutal-primary mb-6"
+                    style={{ borderColor: 'var(--color-primary)' }}
                 >
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-mono-brutal text-white mb-1">
+                            <p className="text-sm font-mono-brutal mb-1" style={{ color: 'var(--color-text-body)' }}>
                                 YOUR BALANCE
                             </p>
                             <p className="text-2xl font-brutal text-primary">
@@ -188,10 +189,10 @@ export function Markets() {
                         <button
                             key={option.key}
                             onClick={() => setSortBy(option.key as SortOption)}
-                            className={`px-4 py-2 border-2 border-white font-brutal transition-none ${
+                            className={`px-4 py-2 border-2 font-brutal transition-colors ${
                                 sortBy === option.key
-                                    ? "bg-primary text-black border-primary"
-                                    : "bg-black text-white hover:bg-white hover:text-black"
+                                    ? "btn-brutal"
+                                    : "btn-secondary"
                             }`}
                         >
                             {option.label}
@@ -264,45 +265,45 @@ export function Markets() {
                                     </div>
 
                                     {/* Pool Visualization */}
-                                    <div className="bg-black border-2 border-white mb-4">
+                                    <div className="border-2 mb-4" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
                                         <div className="grid grid-cols-2">
-                                            <div className="p-3 border-r-2 border-white">
+                                            <div className="p-3 border-r-2" style={{ borderColor: 'var(--color-border)' }}>
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <TrendingUp className="text-success" size={16} />
-                                                    <span className="text-xs font-mono-brutal text-white">
+                                                    <span className="text-xs font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                                         YES POOL
                                                     </span>
                                                 </div>
                                                 <p className="text-lg font-brutal text-success">
                                                     {formatPoints(event.yesPool)}
                                                 </p>
-                                                <p className="text-xs font-mono-brutal text-white mt-1">
+                                                <p className="text-xs font-mono-brutal mt-1" style={{ color: 'var(--color-text-body)' }}>
                                                     {yesPercent.toFixed(1)}%
                                                 </p>
                                             </div>
                                             <div className="p-3">
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <TrendingDown className="text-danger" size={16} />
-                                                    <span className="text-xs font-mono-brutal text-white">
+                                                    <span className="text-xs font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                                         NO POOL
                                                     </span>
                                                 </div>
                                                 <p className="text-lg font-brutal text-danger">
                                                     {formatPoints(event.noPool)}
                                                 </p>
-                                                <p className="text-xs font-mono-brutal text-white mt-1">
+                                                <p className="text-xs font-mono-brutal mt-1" style={{ color: 'var(--color-text-body)' }}>
                                                     {noPercent.toFixed(1)}%
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="w-full bg-black border-t-2 border-white h-4 flex">
+                                        <div className="w-full border-t-2 h-4 flex" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
                                             <div
-                                                className="bg-success h-full"
-                                                style={{ width: `${yesPercent}%` }}
+                                                className="h-full"
+                                                style={{ width: `${yesPercent}%`, backgroundColor: 'var(--color-success)' }}
                                             />
                                             <div
-                                                className="bg-danger h-full"
-                                                style={{ width: `${noPercent}%` }}
+                                                className="h-full"
+                                                style={{ width: `${noPercent}%`, backgroundColor: 'var(--color-danger)' }}
                                             />
                                         </div>
                                     </div>
@@ -391,8 +392,8 @@ export function Markets() {
                                     {/* ROI Info */}
                                     {event.status === "open" && totalPool > 0 && (
                                         <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                                            <div className="bg-black border p-2">
-                                                <p className="font-mono-brutal text-white mb-1">
+                                            <div className="border p-2" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
+                                                <p className="font-mono-brutal mb-1" style={{ color: 'var(--color-text-body)' }}>
                                                     YES ROI
                                                 </p>
                                                 <p className="font-brutal text-success">
@@ -403,8 +404,8 @@ export function Markets() {
                                                     )}
                                                 </p>
                                             </div>
-                                            <div className="bg-black border p-2">
-                                                <p className="font-mono-brutal text-white mb-1">
+                                            <div className="border p-2" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
+                                                <p className="font-mono-brutal mb-1" style={{ color: 'var(--color-text-body)' }}>
                                                     NO ROI
                                                 </p>
                                                 <p className="font-brutal text-danger">
@@ -427,7 +428,7 @@ export function Markets() {
                         <h3 className="text-lg font-brutal mb-2 text-primary">
                             NO EVENTS FOUND
                         </h3>
-                        <p className="font-mono-brutal text-white">
+                        <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                             EVENTS WILL APPEAR HERE WHEN CREATED
                         </p>
                     </div>

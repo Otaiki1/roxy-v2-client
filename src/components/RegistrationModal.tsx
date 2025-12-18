@@ -45,12 +45,13 @@ export function RegistrationModal({
         <AnimatePresence>
             {isOpen && (
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-                    onClick={onClose}
-                >
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style={{ backgroundColor: 'rgba(11, 14, 20, 0.9)' }}
+                onClick={onClose}
+            >
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -68,14 +69,15 @@ export function RegistrationModal({
                                     <h3 className="text-xl font-brutal text-primary">
                                         REGISTER
                                     </h3>
-                                    <p className="text-xs font-mono-brutal text-white">
+                                    <p className="text-xs font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         CREATE YOUR ACCOUNT
                                     </p>
                                 </div>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="text-white hover:text-accent transition-none"
+                                className="transition-colors"
+                                style={{ color: 'var(--color-text-body)' }}
                                 disabled={isLoading}
                             >
                                 <X size={20} />
@@ -83,14 +85,14 @@ export function RegistrationModal({
                         </div>
 
                         {/* Info Box */}
-                        <div className="bg-black border border-primary p-4 mb-6">
-                            <p className="text-sm font-mono-brutal text-white mb-2">
+                        <div className="border p-4 mb-6" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-primary)' }}>
+                            <p className="text-sm font-mono-brutal mb-2" style={{ color: 'var(--color-text-body)' }}>
                                 STARTING BONUS:
                             </p>
                             <p className="text-2xl font-brutal text-primary">
                                 1,000 POINTS
                             </p>
-                            <p className="text-xs font-mono-brutal text-white mt-2">
+                            <p className="text-xs font-mono-brutal mt-2" style={{ color: 'var(--color-text-body)' }}>
                                 Free points to start predicting. Earn more by winning predictions.
                             </p>
                         </div>
@@ -98,7 +100,7 @@ export function RegistrationModal({
                         {/* Form */}
                         <form onSubmit={handleSubmit}>
                             <div className="mb-6">
-                                <label className="block text-sm font-brutal text-white mb-2">
+                                <label className="block text-sm font-brutal mb-2" style={{ color: 'var(--color-text)' }}>
                                     USERNAME
                                 </label>
                                 <input
@@ -110,11 +112,12 @@ export function RegistrationModal({
                                     }}
                                     placeholder="ENTER USERNAME"
                                     maxLength={50}
-                                    className="w-full bg-black border-2 border-white px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
+                                    className="w-full border-2 px-4 py-3 focus:outline-none focus:border-primary font-mono-brutal"
+                                    style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
                                     disabled={isLoading}
                                     autoFocus
                                 />
-                                <p className="text-xs font-mono-brutal text-white mt-2">
+                                <p className="text-xs font-mono-brutal mt-2" style={{ color: 'var(--color-text-body)' }}>
                                     Must be unique. Max 50 characters.
                                 </p>
                                 {error && (
@@ -130,7 +133,7 @@ export function RegistrationModal({
                                     type="button"
                                     onClick={onClose}
                                     disabled={isLoading}
-                                    className="flex-1 py-3 px-4 bg-black text-white border-2 border-white font-brutal hover:bg-white hover:text-black transition-none disabled:opacity-50"
+                                    className="flex-1 py-3 px-4 btn-secondary disabled:opacity-50"
                                 >
                                     CANCEL
                                 </button>

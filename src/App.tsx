@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Landing } from "@/pages/Landing";
 import { Dashboard } from "@/pages/Dashboard";
 import { Markets } from "@/pages/Markets";
+import { Marketplace } from "@/pages/Marketplace";
 import { Portfolio } from "@/pages/Portfolio";
 import { Leaderboard } from "@/pages/Leaderboard";
 import { Guilds } from "@/pages/Guilds";
@@ -49,6 +50,10 @@ function App() {
                                         <Route
                                             path="/markets"
                                             element={<Markets />}
+                                        />
+                                        <Route
+                                            path="/marketplace"
+                                            element={<Marketplace />}
                                         />
                                         <Route
                                             path="/portfolio"

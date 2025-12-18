@@ -1,17 +1,19 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-    LuPlay as Play,
-    LuTrendingUp as TrendingUp,
-    LuTrophy as Trophy,
-    LuUsers as Users,
-    LuBriefcase as Briefcase,
-    LuArrowRight as ArrowRight,
-    LuStar as Star,
-    LuZap as Zap,
-    LuTarget as Target,
-    LuShield as Shield,
-} from "react-icons/lu";
+    Play,
+    TrendingUp,
+    Trophy,
+    Users,
+    Briefcase,
+    ArrowRight,
+    Star,
+    Zap,
+    Target,
+    Shield,
+    Coins,
+    BarChart3,
+} from "lucide-react";
 import roxyLogo from "@/assets/roxy-logo.png";
 import roxyMain from "@/assets/roxy.png";
 import roxy33 from "@/assets/roxy-33.png";
@@ -21,36 +23,36 @@ import wealth from "@/assets/wealth.png";
 export function Landing() {
     const features = [
         {
-            icon: TrendingUp,
-            title: "REAL-TIME TRADING",
+            icon: Target,
+            title: "PREDICTION MARKETS",
             description:
-                "Trade crypto assets with live market data and instant execution",
+                "Stake points on YES or NO outcomes. Win rewards when you predict correctly",
         },
         {
             icon: Trophy,
-            title: "COMPETITIVE LEADERBOARDS",
+            title: "LEADERBOARDS",
             description:
-                "Compete with traders worldwide and climb the rankings",
+                "Compete globally. Track wins, losses, and total points earned",
         },
         {
             icon: Users,
             title: "GUILD SYSTEM",
             description:
-                "Join forces with other traders and build powerful alliances",
+                "Form guilds, pool points, and make collaborative predictions",
         },
         {
-            icon: Briefcase,
-            title: "PORTFOLIO MANAGEMENT",
+            icon: Coins,
+            title: "POINT MARKETPLACE",
             description:
-                "Track your investments and optimize your trading strategy",
+                "Earn 10,000+ points to unlock selling. Trade points with other players",
         },
     ];
 
     const stats = [
-        { number: "10K+", label: "ACTIVE TRADERS" },
-        { number: "$2.5M", label: "TOTAL VOLUME" },
-        { number: "500+", label: "CRYPTO ASSETS" },
-        { number: "50+", label: "GUILDS" },
+        { number: "10K+", label: "ACTIVE PREDICTORS" },
+        { number: "2.5M", label: "POINTS STAKED" },
+        { number: "500+", label: "EVENTS RESOLVED" },
+        { number: "50+", label: "GUILDS FORMED" },
     ];
 
     return (
@@ -111,19 +113,17 @@ export function Landing() {
                         </div>
 
                         <h2 className="text-5xl font-brutal text-white mb-6 leading-tight">
-                            CRYPTO PORTFOLIO
+                            BITCOIN L2
                             <br />
-                            <span className="text-accent">MANAGER</span>
+                            <span className="text-accent">PREDICTION MARKET</span>
                         </h2>
 
                         <div className="space-y-4 mb-8 ">
                             <p className="text-2xl font-mono-brutal text-text-body leading-relaxed">
-                                The ultimate crypto trading game where strategy
-                                meets opportunity.
+                                Predict outcomes. Stake points. Win rewards.
                             </p>
                             <p className="text-xl font-mono-brutal text-text-body leading-relaxed">
-                                Build your empire, compete with the best, and
-                                dominate the markets.
+                                Earn points through predictions. Trade on the marketplace. Join guilds for collaborative staking.
                             </p>
                         </div>
 
@@ -132,17 +132,20 @@ export function Landing() {
                                 to="/app"
                                 className="btn-brutal text-lg px-8 py-4 flex items-center justify-center gap-2 group"
                             >
-                                START TRADING
+                                START PREDICTING
                                 <ArrowRight
                                     className="group-hover:translate-x-1 transition-transform"
                                     size={20}
                                 />
                             </Link>
 
-                            <button className="border-2 border-primary text-primary hover:bg-primary hover:text-black font-brutal px-8 py-4 transition-none flex items-center justify-center gap-2">
-                                <Play size={20} />
-                                WATCH TRAILER
-                            </button>
+                            <Link
+                                to="/app/markets"
+                                className="border-2 border-primary text-primary hover:bg-primary hover:text-black font-brutal px-8 py-4 transition-none flex items-center justify-center gap-2"
+                            >
+                                <BarChart3 size={20} />
+                                VIEW EVENTS
+                            </Link>
                         </div>
                     </motion.div>
 
@@ -467,7 +470,7 @@ export function Landing() {
                         </h3>
                     </div>
                     <p className="font-mono-brutal text-text-body mb-4">
-                        The ultimate crypto portfolio management experience
+                        Decentralized prediction markets on Bitcoin L2
                     </p>
                     <div className="flex justify-center gap-8">
                         <Link

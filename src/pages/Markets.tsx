@@ -1,122 +1,196 @@
-import { useState } from "react";
-import { useGameStore } from "@/store/gameStore";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-    LuPlus as Plus,
-    LuTrendingUp as TrendingUp,
-} from "react-icons/lu";
-import { BuySellModal } from "@/components/BuySellModal";
+    TrendingUp,
+    TrendingDown,
+    CheckCircle2,
+    Clock,
+    Target,
+} from "lucide-react";
+import { StakeModal } from "@/components/StakeModal";
+import { ClaimModal } from "@/components/ClaimModal";
 
-type SortOption = "all" | "active" | "newest";
+interface Event {
+    eventId: number;
+    metadata: string;
+    yesPool: number;
+    noPool: number;
+    status: "open" | "resolved";
+    winner: boolean | null;
+    creator: string;
+}
+
+interface UserStake {
+    eventId: number;
+    stakeType: "yes" | "no";
+    amount: number;
+}
+
+type SortOption = "all" | "open" | "resolved";
 
 export function Markets() {
-    const { markets, player, createMarket } = useGameStore();
+    const [events, setEvents] = useState<Event[]>([]);
+    const [userStakes, setUserStakes] = useState<UserStake[]>([]);
     const [sortBy, setSortBy] = useState<SortOption>("all");
-    const [selectedMarket, setSelectedMarket] = useState<string | null>(null);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [newMarketTitle, setNewMarketTitle] = useState("");
-    const [newMarketAmount, setNewMarketAmount] = useState("");
-    const [newMarketFee, setNewMarketFee] = useState("");
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [showStakeModal, setShowStakeModal] = useState(false);
+    const [showClaimModal, setShowClaimModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [userPoints, setUserPoints] = useState(0);
 
-    // Filter markets by status
-    const filteredMarkets = markets.filter((market) => {
-        if (sortBy === "active") return market.status === "Active";
-        if (sortBy === "newest")
-            return market.creationTime > Date.now() - 7 * 24 * 60 * 60 * 1000;
+    useEffect(() => {
+        // TODO: Replace with actual contract calls
+        // const loadEvents = async () => {
+        //     const events = await contract.getAllEvents();
+        //     const stakes = await contract.getUserStakes(userAddress);
+        //     const points = await contract.getUserPoints(userAddress);
+        //     setEvents(events);
+        //     setUserStakes(stakes);
+        //     setUserPoints(points);
+        // };
+
+        // Mock data
+        setTimeout(() => {
+            setEvents([
+                {
+                    eventId: 1,
+                    metadata: "Will Bitcoin reach $100k by 2025?",
+                    yesPool: 5000,
+                    noPool: 3000,
+                    status: "open",
+                    winner: null,
+                    creator: "ADMIN",
+                },
+                {
+                    eventId: 2,
+                    metadata: "Will Ethereum hit $5000?",
+                    yesPool: 2000,
+                    noPool: 4000,
+                    status: "resolved",
+                    winner: false,
+                    creator: "ADMIN",
+                },
+                {
+                    eventId: 3,
+                    metadata: "Will Solana reach $200?",
+                    yesPool: 1500,
+                    noPool: 1200,
+                    status: "open",
+                    winner: null,
+                    creator: "ADMIN",
+                },
+            ]);
+            setUserStakes([
+                { eventId: 1, stakeType: "yes", amount: 500 },
+                { eventId: 2, stakeType: "no", amount: 300 },
+            ]);
+            setUserPoints(15000);
+            setIsLoading(false);
+        }, 500);
+    }, []);
+
+    const filteredEvents = events.filter((event) => {
+        if (sortBy === "open") return event.status === "open";
+        if (sortBy === "resolved") return event.status === "resolved";
         return true;
     });
 
-    // Check if player can create market (Level 5+ and 10,000+ points)
-    const canCreateMarket = player.level >= 5 && player.tokenBalance >= 10000;
+    const getUserStake = (eventId: number): UserStake | null => {
+        return userStakes.find((s) => s.eventId === eventId) || null;
+    };
 
-    const handleCreateMarket = () => {
-        const amount = parseFloat(newMarketAmount);
-        const feePercent = parseFloat(newMarketFee);
-
-        if (
-            !newMarketTitle.trim() ||
-            isNaN(amount) ||
-            amount <= 0 ||
-            isNaN(feePercent) ||
-            feePercent < 0 ||
-            feePercent > 100
-        ) {
-            return;
+    const handleStake = (eventId: number, stakeType: "yes" | "no") => {
+        const event = events.find((e) => e.eventId === eventId);
+        if (event && event.status === "open") {
+            setSelectedEvent(event);
+            setShowStakeModal(true);
         }
+    };
 
-        if (!canCreateMarket) {
-            return;
+    const handleClaim = (eventId: number) => {
+        const event = events.find((e) => e.eventId === eventId);
+        if (event && event.status === "resolved") {
+            setSelectedEvent(event);
+            setShowClaimModal(true);
         }
-
-        createMarket(newMarketTitle, amount, feePercent);
-        setShowCreateModal(false);
-        setNewMarketTitle("");
-        setNewMarketAmount("");
-        setNewMarketFee("");
     };
 
     const formatPoints = (points: number) => {
         return points.toLocaleString() + " PTS";
     };
 
-    const formatFee = (fee: number) => {
-        return `${fee}%`;
+    const calculateOdds = (yesPool: number, noPool: number, stakeType: "yes" | "no") => {
+        const totalPool = yesPool + noPool;
+        if (totalPool === 0) return "N/A";
+        
+        const winningPool = stakeType === "yes" ? yesPool : noPool;
+        if (winningPool === 0) return "N/A";
+        
+        // Potential reward = (stake * totalPool) / winningPool
+        // For 100 points stake
+        const potentialReward = (100 * totalPool) / winningPool;
+        const profit = potentialReward - 100;
+        const roi = (profit / 100) * 100;
+        
+        return `${roi.toFixed(1)}% ROI`;
     };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-2 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
+                    <p className="font-mono-brutal text-white">LOADING EVENTS...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-black text-white p-4 pb-20 lg:pb-4">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="mb-6 flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-brutal text-primary mb-2">
-                            POINT TRADING MARKETS
-                        </h1>
-                        <p className="font-mono-brutal text-white">
-                            BUY AND SELL POINTS WITH OTHER PLAYERS
-                        </p>
-                    </div>
-                    {canCreateMarket && (
-                        <button
-                            onClick={() => setShowCreateModal(true)}
-                            className="flex items-center gap-2 px-4 py-2 btn-brutal"
-                        >
-                            <Plus size={16} />
-                            CREATE MARKET
-                        </button>
-                    )}
+                <div className="mb-6">
+                    <h1 className="text-2xl font-brutal text-primary mb-2">
+                        PREDICTION EVENTS
+                    </h1>
+                    <p className="font-mono-brutal text-white">
+                        STAKE POINTS ON YES OR NO OUTCOMES
+                    </p>
                 </div>
 
-                {/* Requirements Info */}
-                {!canCreateMarket && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="card-brutal mb-6 border-accent"
-                    >
-                        <p className="font-mono-brutal text-white">
-                            <span className="text-accent font-brutal">
-                                MARKET CREATION REQUIREMENTS:
-                            </span>{" "}
-                            Level 5+ and 10,000+ points required. You are currently Level{" "}
-                            {player.level} with {formatPoints(player.tokenBalance)}.
-                        </p>
-                    </motion.div>
-                )}
+                {/* User Points */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="card-brutal-primary mb-6 border-primary"
+                >
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-mono-brutal text-white mb-1">
+                                YOUR BALANCE
+                            </p>
+                            <p className="text-2xl font-brutal text-primary">
+                                {formatPoints(userPoints)}
+                            </p>
+                        </div>
+                        <Target className="text-primary" size={32} />
+                    </div>
+                </motion.div>
 
                 {/* Sort Options */}
                 <div className="flex gap-2 mb-6">
                     {[
-                        { key: "all", label: "ALL MARKETS" },
-                        { key: "active", label: "ACTIVE" },
-                        { key: "newest", label: "NEWEST" },
+                        { key: "all", label: "ALL EVENTS" },
+                        { key: "open", label: "OPEN" },
+                        { key: "resolved", label: "RESOLVED" },
                     ].map((option) => (
                         <button
                             key={option.key}
                             onClick={() => setSortBy(option.key as SortOption)}
-                            className={`px-4 py-2 border-brutal font-brutal transition-none ${
+                            className={`px-4 py-2 border-2 border-white font-brutal transition-none ${
                                 sortBy === option.key
-                                    ? "bg-primary text-black"
+                                    ? "bg-primary text-black border-primary"
                                     : "bg-black text-white hover:bg-white hover:text-black"
                             }`}
                         >
@@ -125,274 +199,274 @@ export function Markets() {
                     ))}
                 </div>
 
-                {/* Market Cards */}
-                {filteredMarkets.length > 0 ? (
-                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                        {filteredMarkets.map((market, index) => {
-                            const liquidityPercent =
-                                (market.totalLiquidity / market.amount) * 100;
-                            const playerPosition = market.positions[player.id] || 0;
+                {/* Event Cards */}
+                {filteredEvents.length > 0 ? (
+                    <div className="grid gap-6 lg:grid-cols-2">
+                        {filteredEvents.map((event, index) => {
+                            const userStake = getUserStake(event.eventId);
+                            const totalPool = event.yesPool + event.noPool;
+                            const yesPercent =
+                                totalPool > 0
+                                    ? (event.yesPool / totalPool) * 100
+                                    : 50;
+                            const noPercent = 100 - yesPercent;
 
                             return (
                                 <motion.div
-                                    key={market.id}
+                                    key={event.eventId}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
-                                    className={`card-brutal cursor-pointer transition-none ${
-                                        selectedMarket === market.id
-                                            ? "border-accent border-2"
-                                            : "border hover:border-primary"
+                                    className={`card-brutal border-2 ${
+                                        event.status === "open"
+                                            ? "border-primary"
+                                            : "border-accent"
                                     }`}
-                                    onClick={() => setSelectedMarket(market.id)}
                                 >
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex-1">
-                                            <h3 className="font-brutal text-primary mb-1">
-                                                {market.title}
-                                            </h3>
-                                            <p className="text-xs font-mono-brutal text-white">
-                                                Creator: {market.creator.slice(0, 8)}...
+                                    {/* Event Header */}
+                                    <div className="mb-4">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center gap-2">
+                                                {event.status === "open" ? (
+                                                    <Clock className="text-accent" size={20} />
+                                                ) : (
+                                                    <CheckCircle2 className="text-success" size={20} />
+                                                )}
+                                                <span
+                                                    className={`text-xs font-brutal px-2 py-1 border ${
+                                                        event.status === "open"
+                                                            ? "bg-accent/20 border-accent text-accent"
+                                                            : "bg-success/20 border-success text-success"
+                                                    }`}
+                                                >
+                                                    {event.status.toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <span className="text-xs font-mono-brutal text-white">
+                                                EVENT #{event.eventId}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-lg font-brutal text-primary mb-2">
+                                            {event.metadata}
+                                        </h3>
+                                        {event.status === "resolved" && event.winner !== null && (
+                                            <p className="text-sm font-mono-brutal text-white">
+                                                Winner:{" "}
+                                                <span
+                                                    className={`font-brutal ${
+                                                        event.winner ? "text-success" : "text-danger"
+                                                    }`}
+                                                >
+                                                    {event.winner ? "YES" : "NO"}
+                                                </span>
                                             </p>
-                                        </div>
-                                        <div className="text-right">
-                                            <span
-                                                className={`text-xs font-brutal px-2 py-1 border ${
-                                                    market.status === "Active"
-                                                        ? "bg-success/20 border-success text-success"
-                                                        : "bg-gray-600 border-gray-600 text-gray-400"
-                                                }`}
-                                            >
-                                                {market.status}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-3 mb-4">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm font-mono-brutal text-white">
-                                                TOTAL LIQUIDITY
-                                            </span>
-                                            <span className="font-brutal text-primary">
-                                                {formatPoints(market.totalLiquidity)}
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm font-mono-brutal text-white">
-                                                FEE PERCENTAGE
-                                            </span>
-                                            <span className="font-brutal text-accent">
-                                                {formatFee(market.feePercent)}
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm font-mono-brutal text-white">
-                                                PARTICIPANTS
-                                            </span>
-                                            <span className="font-brutal text-white">
-                                                {market.totalParticipants}
-                                            </span>
-                                        </div>
-
-                                        {/* Liquidity Bar */}
-                                        <div>
-                                            <div className="flex justify-between items-center mb-1">
-                                                <span className="text-xs font-mono-brutal text-white">
-                                                    LIQUIDITY
-                                                </span>
-                                                <span className="text-xs font-mono-brutal text-white">
-                                                    {liquidityPercent.toFixed(1)}%
-                                                </span>
-                                            </div>
-                                            <div className="w-full bg-black border h-2">
-                                                <div
-                                                    className="bg-primary h-full border border-primary"
-                                                    style={{
-                                                        width: `${liquidityPercent}%`,
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {playerPosition > 0 && (
-                                            <div className="bg-primary/20 border border-primary p-2">
-                                                <p className="text-xs font-mono-brutal text-white">
-                                                    YOUR POSITION
-                                                </p>
-                                                <p className="font-brutal text-primary">
-                                                    {formatPoints(playerPosition)}
-                                                </p>
-                                            </div>
                                         )}
                                     </div>
 
+                                    {/* Pool Visualization */}
+                                    <div className="bg-black border-2 border-white mb-4">
+                                        <div className="grid grid-cols-2">
+                                            <div className="p-3 border-r-2 border-white">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <TrendingUp className="text-success" size={16} />
+                                                    <span className="text-xs font-mono-brutal text-white">
+                                                        YES POOL
+                                                    </span>
+                                                </div>
+                                                <p className="text-lg font-brutal text-success">
+                                                    {formatPoints(event.yesPool)}
+                                                </p>
+                                                <p className="text-xs font-mono-brutal text-white mt-1">
+                                                    {yesPercent.toFixed(1)}%
+                                                </p>
+                                            </div>
+                                            <div className="p-3">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <TrendingDown className="text-danger" size={16} />
+                                                    <span className="text-xs font-mono-brutal text-white">
+                                                        NO POOL
+                                                    </span>
+                                                </div>
+                                                <p className="text-lg font-brutal text-danger">
+                                                    {formatPoints(event.noPool)}
+                                                </p>
+                                                <p className="text-xs font-mono-brutal text-white mt-1">
+                                                    {noPercent.toFixed(1)}%
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="w-full bg-black border-t-2 border-white h-4 flex">
+                                            <div
+                                                className="bg-success h-full"
+                                                style={{ width: `${yesPercent}%` }}
+                                            />
+                                            <div
+                                                className="bg-danger h-full"
+                                                style={{ width: `${noPercent}%` }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* User Stake Info */}
+                                    {userStake && (
+                                        <div className="bg-primary/20 border border-primary p-3 mb-4">
+                                            <p className="text-xs font-mono-brutal text-white mb-1">
+                                                YOUR STAKE
+                                            </p>
+                                            <div className="flex items-center justify-between">
+                                                <span
+                                                    className={`font-brutal ${
+                                                        userStake.stakeType === "yes"
+                                                            ? "text-success"
+                                                            : "text-danger"
+                                                    }`}
+                                                >
+                                                    {userStake.stakeType.toUpperCase()}:{" "}
+                                                    {formatPoints(userStake.amount)}
+                                                </span>
+                                                {event.status === "resolved" &&
+                                                    event.winner !== null &&
+                                                    userStake.stakeType ===
+                                                        (event.winner ? "yes" : "no") && (
+                                                        <span className="text-xs font-brutal text-success">
+                                                            WINNER!
+                                                        </span>
+                                                    )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Action Buttons */}
                                     <div className="flex gap-2">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedMarket(market.id);
-                                            }}
-                                            className="flex-1 btn-brutal"
-                                            disabled={market.status !== "Active"}
-                                        >
-                                            BUY POINTS
-                                        </button>
-                                        {player.level >= 5 && (
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedMarket(market.id);
-                                                }}
-                                                className="flex-1 btn-danger font-brutal py-2 px-4"
-                                                disabled={
-                                                    market.status !== "Active" ||
-                                                    playerPosition === 0
-                                                }
-                                            >
-                                                SELL POINTS
-                                            </button>
+                                        {event.status === "open" ? (
+                                            <>
+                                                <button
+                                                    onClick={() =>
+                                                        handleStake(event.eventId, "yes")
+                                                    }
+                                                    className="flex-1 btn-brutal flex items-center justify-center gap-2"
+                                                >
+                                                    <TrendingUp size={16} />
+                                                    STAKE YES
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleStake(event.eventId, "no")
+                                                    }
+                                                    className="flex-1 btn-danger flex items-center justify-center gap-2"
+                                                >
+                                                    <TrendingDown size={16} />
+                                                    STAKE NO
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {userStake &&
+                                                    event.winner !== null &&
+                                                    userStake.stakeType ===
+                                                        (event.winner ? "yes" : "no") && (
+                                                        <button
+                                                            onClick={() =>
+                                                                handleClaim(event.eventId)
+                                                            }
+                                                            className="flex-1 btn-brutal"
+                                                        >
+                                                            CLAIM REWARD
+                                                        </button>
+                                                    )}
+                                                <div className="flex-1 bg-black border-2 border-white p-3 text-center">
+                                                    <p className="text-xs font-mono-brutal text-white">
+                                                        {userStake
+                                                            ? userStake.stakeType ===
+                                                              (event.winner ? "yes" : "no")
+                                                                ? "CLAIM AVAILABLE"
+                                                                : "YOU LOST"
+                                                            : "NO STAKE"}
+                                                    </p>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
+
+                                    {/* ROI Info */}
+                                    {event.status === "open" && totalPool > 0 && (
+                                        <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                                            <div className="bg-black border p-2">
+                                                <p className="font-mono-brutal text-white mb-1">
+                                                    YES ROI
+                                                </p>
+                                                <p className="font-brutal text-success">
+                                                    {calculateOdds(
+                                                        event.yesPool,
+                                                        event.noPool,
+                                                        "yes"
+                                                    )}
+                                                </p>
+                                            </div>
+                                            <div className="bg-black border p-2">
+                                                <p className="font-mono-brutal text-white mb-1">
+                                                    NO ROI
+                                                </p>
+                                                <p className="font-brutal text-danger">
+                                                    {calculateOdds(
+                                                        event.yesPool,
+                                                        event.noPool,
+                                                        "no"
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </motion.div>
                             );
                         })}
                     </div>
                 ) : (
                     <div className="card-brutal text-center py-12">
-                        <TrendingUp size={48} className="mx-auto mb-4 text-primary" />
+                        <Target size={48} className="mx-auto mb-4 text-primary" />
                         <h3 className="text-lg font-brutal mb-2 text-primary">
-                            NO MARKETS FOUND
+                            NO EVENTS FOUND
                         </h3>
                         <p className="font-mono-brutal text-white">
-                            {canCreateMarket
-                                ? "CREATE THE FIRST MARKET TO GET STARTED"
-                                : "MARKETS WILL APPEAR HERE WHEN CREATED"}
+                            EVENTS WILL APPEAR HERE WHEN CREATED
                         </p>
                     </div>
                 )}
 
-                {/* Buy/Sell Modal */}
-                {selectedMarket && (
-                    <BuySellModal
-                        market={markets.find((m) => m.id === selectedMarket)!}
-                        onClose={() => setSelectedMarket(null)}
+                {/* Modals */}
+                {selectedEvent && showStakeModal && (
+                    <StakeModal
+                        event={selectedEvent}
+                        userPoints={userPoints}
+                        existingStake={getUserStake(selectedEvent.eventId)}
+                        onClose={() => {
+                            setShowStakeModal(false);
+                            setSelectedEvent(null);
+                        }}
+                        onStake={(amount, stakeType) => {
+                            // TODO: Call contract stake function
+                            console.log("Staking", amount, stakeType);
+                            setShowStakeModal(false);
+                            setSelectedEvent(null);
+                        }}
                     />
                 )}
 
-                {/* Create Market Modal */}
-                {showCreateModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-                        onClick={() => setShowCreateModal(false)}
-                    >
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            className="card-brutal w-full max-w-md"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <h3 className="text-lg font-brutal text-primary mb-4">
-                                CREATE NEW MARKET
-                            </h3>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-brutal text-white mb-2">
-                                        MARKET TITLE
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={newMarketTitle}
-                                        onChange={(e) =>
-                                            setNewMarketTitle(e.target.value)
-                                        }
-                                        placeholder="ENTER MARKET TITLE"
-                                        className="w-full bg-black border-brutal px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-brutal text-white mb-2">
-                                        AMOUNT (POINTS)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={newMarketAmount}
-                                        onChange={(e) =>
-                                            setNewMarketAmount(e.target.value)
-                                        }
-                                        placeholder="10000"
-                                        min="1000"
-                                        step="100"
-                                        className="w-full bg-black border-brutal px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
-                                    />
-                                    <p className="text-xs font-mono-brutal text-white mt-1">
-                                        Minimum: 1,000 points. Creation cost: 100 points.
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-brutal text-white mb-2">
-                                        FEE PERCENTAGE (0-100)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={newMarketFee}
-                                        onChange={(e) =>
-                                            setNewMarketFee(e.target.value)
-                                        }
-                                        placeholder="10"
-                                        min="0"
-                                        max="100"
-                                        step="1"
-                                        className="w-full bg-black border-brutal px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary font-mono-brutal"
-                                    />
-                                    <p className="text-xs font-mono-brutal text-white mt-1">
-                                        You receive 98% of fees, platform gets 2%.
-                                    </p>
-                                </div>
-
-                                <div className="bg-black border p-3">
-                                    <p className="text-xs font-mono-brutal text-white mb-2">
-                                        TOTAL COST:
-                                    </p>
-                                    <p className="font-brutal text-primary">
-                                        {formatPoints(
-                                            (parseFloat(newMarketAmount) || 0) + 100
-                                        )}
-                                    </p>
-                                    <p className="text-xs font-mono-brutal text-white mt-2">
-                                        Your balance: {formatPoints(player.tokenBalance)}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex gap-3 mt-6">
-                                <button
-                                    onClick={() => setShowCreateModal(false)}
-                                    className="flex-1 py-3 px-4 bg-black text-white border-brutal font-brutal hover:bg-white hover:text-black transition-none"
-                                >
-                                    CANCEL
-                                </button>
-                                <button
-                                    onClick={handleCreateMarket}
-                                    disabled={
-                                        !canCreateMarket ||
-                                        !newMarketTitle.trim() ||
-                                        !newMarketAmount ||
-                                        parseFloat(newMarketAmount) < 1000 ||
-                                        parseFloat(newMarketAmount) + 100 >
-                                            player.tokenBalance
-                                    }
-                                    className="flex-1 py-3 px-4 btn-brutal disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    CREATE MARKET
-                                </button>
-                            </div>
-                        </motion.div>
-                    </motion.div>
+                {selectedEvent && showClaimModal && (
+                    <ClaimModal
+                        event={selectedEvent}
+                        userStake={getUserStake(selectedEvent.eventId)!}
+                        onClose={() => {
+                            setShowClaimModal(false);
+                            setSelectedEvent(null);
+                        }}
+                        onClaim={() => {
+                            // TODO: Call contract claim function
+                            console.log("Claiming");
+                            setShowClaimModal(false);
+                            setSelectedEvent(null);
+                        }}
+                    />
                 )}
             </div>
         </div>

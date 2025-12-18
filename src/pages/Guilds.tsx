@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { motion } from "framer-motion";
 import {
-    LuUsers as Users,
-    LuPlus as Plus,
-    LuCrown as Crown,
-    LuMessageCircle as MessageCircle,
-    LuMapPin as MapPin,
-    LuLogOut as LogOut,
-    LuCoins as Coins,
-} from "react-icons/lu";
+    Users,
+    Plus,
+    Crown,
+    MessageCircle,
+    MapPin,
+    LogOut,
+    Coins,
+} from "lucide-react";
 
 export function Guilds() {
     const {

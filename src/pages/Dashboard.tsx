@@ -1,70 +1,199 @@
-import { useGameStore, getXPForNextLevel } from "@/store/gameStore";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-    LuTrendingUp as TrendingUp,
-    LuTrendingDown as TrendingDown,
-    LuStar as Star,
-    LuTrophy as Trophy,
-    LuArrowRight as ArrowRight,
-    LuGift as Gift,
-    LuCalendar as Calendar,
-} from "react-icons/lu";
+    TrendingUp,
+    TrendingDown,
+    Trophy,
+    ArrowRight,
+    Target,
+    Coins,
+    CheckCircle2,
+    XCircle,
+    Clock,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/roxy-logo.png";
-import { useState } from "react";
+import { RegistrationModal } from "@/components/RegistrationModal";
+
+// Mock contract data - replace with actual contract calls
+interface UserData {
+    username: string | null;
+    points: number;
+    earnedPoints: number;
+    canSell: boolean;
+    stats: {
+        totalPredictions: number;
+        wins: number;
+        losses: number;
+        totalPointsEarned: number;
+        winRate: number; // 0-10000 (10000 = 100%)
+    } | null;
+}
+
+interface ActiveStake {
+    eventId: number;
+    eventMetadata: string;
+    stakeType: "yes" | "no";
+    amount: number;
+    status: "open" | "resolved";
+}
 
 export function Dashboard() {
-    const {
-        player,
-        predictions,
-        currentMarketPrice,
-        predictDailyOutcome,
-        predictWeeklyOutcome,
-        predictMonthlyOutcome,
-        claimDailyReward,
-        achievements,
-    } = useGameStore();
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [showRegistration, setShowRegistration] = useState(false);
+    const [activeStakes, setActiveStakes] = useState<ActiveStake[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Calculate total profit
-    const totalProfit = player.totalEarned - player.totalSpent;
-    const [showPredictionModal, setShowPredictionModal] = useState(false);
-    const [predictionPeriod, setPredictionPeriod] = useState<
-        "Daily" | "Weekly" | "Monthly"
-    >("Daily");
+    // Check registration status and load user data
+    useEffect(() => {
+        // TODO: Replace with actual contract calls
+        // const checkRegistration = async () => {
+        //     const user = await contract.getUserPoints(userAddress);
+        //     if (user) {
+        //         setIsRegistered(true);
+        //         loadUserData();
+        //     } else {
+        //         setIsRegistered(false);
+        //     }
+        // };
+        
+        // Mock data for now
+        setTimeout(() => {
+            setIsRegistered(true);
+            setUserData({
+                username: "PREDICTOR_01",
+                points: 15000,
+                earnedPoints: 12000,
+                canSell: true,
+                stats: {
+                    totalPredictions: 25,
+                    wins: 15,
+                    losses: 10,
+                    totalPointsEarned: 12000,
+                    winRate: 6000, // 60%
+                },
+            });
+            setActiveStakes([
+                {
+                    eventId: 1,
+                    eventMetadata: "Will Bitcoin reach $100k by 2025?",
+                    stakeType: "yes",
+                    amount: 500,
+                    status: "open",
+                },
+                {
+                    eventId: 2,
+                    eventMetadata: "Will Ethereum hit $5000?",
+                    stakeType: "no",
+                    amount: 300,
+                    status: "resolved",
+                },
+            ]);
+            setIsLoading(false);
+        }, 500);
+    }, []);
 
-    // Calculate XP progress for current level
-    const xpForNextLevel = getXPForNextLevel(player.experiencePoints);
-    const levelXPThreshold = 1000 * Math.pow(4, player.level - 1);
-    const xpProgress =
-        player.level > 1
-            ? ((player.experiencePoints % levelXPThreshold) / levelXPThreshold) * 100
-            : (player.experiencePoints / 1000) * 100;
-
-    // Get recent achievements
-    const recentAchievements = player.achievementsEarned
-        .slice(-3)
-        .map((id) => achievements.find((a) => a.id === id))
-        .filter((a): a is NonNullable<typeof a> => a !== undefined);
-
-    // Get active predictions
-    const activePredictions = predictions.filter((p) => !p.resolved);
-
-    // Check if daily reward can be claimed (24-hour cooldown)
-    const oneDayMs = 24 * 60 * 60 * 1000;
-    const lastLogin = player.lastLogin || 0;
-    const timeSinceLastLogin = Date.now() - lastLogin;
-    const canClaimDailyReward = timeSinceLastLogin >= oneDayMs || lastLogin === 0;
-
-    const handlePredict = (outcome: "Rise" | "Fall" | "Neutral") => {
-        if (predictionPeriod === "Daily") {
-            predictDailyOutcome(outcome);
-        } else if (predictionPeriod === "Weekly") {
-            predictWeeklyOutcome(outcome);
-        } else {
-            predictMonthlyOutcome(outcome);
-        }
-        setShowPredictionModal(false);
+    const handleRegister = async (username: string) => {
+        // TODO: Call contract register function
+        // await contract.register(username);
+        setIsRegistered(true);
+        setUserData({
+            username,
+            points: 1000, // Starting points
+            earnedPoints: 0,
+            canSell: false,
+            stats: null,
+        });
     };
+
+    const formatPoints = (points: number) => {
+        return points.toLocaleString() + " PTS";
+    };
+
+    const formatWinRate = (rate: number) => {
+        return (rate / 100).toFixed(1) + "%";
+    };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-2 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
+                    <p className="font-mono-brutal text-white">LOADING...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isRegistered) {
+        return (
+            <>
+                <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-center max-w-2xl"
+                    >
+                        <div className="mb-8">
+                            <img
+                                src={logo}
+                                alt="Roxy Logo"
+                                className="w-24 h-24 mx-auto mb-6 object-contain"
+                            />
+                            <h1 className="text-5xl font-brutal text-primary mb-4">
+                                WELCOME TO ROXY
+                            </h1>
+                            <p className="text-xl font-mono-brutal text-white mb-8">
+                                REGISTER TO START PREDICTING
+                            </p>
+                        </div>
+
+                        <div className="bg-card border-2 border-primary p-8 mb-8">
+                            <h2 className="text-2xl font-brutal text-primary mb-4">
+                                GET STARTED
+                            </h2>
+                            <ul className="text-left space-y-3 font-mono-brutal text-white mb-6">
+                                <li className="flex items-center gap-3">
+                                    <CheckCircle className="text-primary" size={20} />
+                                    Receive 1,000 starting points
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <CheckCircle className="text-primary" size={20} />
+                                    Start predicting on events
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <CheckCircle className="text-primary" size={20} />
+                                    Earn points by winning predictions
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <CheckCircle className="text-primary" size={20} />
+                                    Unlock marketplace at 10,000 earned points
+                                </li>
+                            </ul>
+                            <button
+                                onClick={() => setShowRegistration(true)}
+                                className="btn-brutal w-full text-lg py-4"
+                            >
+                                REGISTER NOW
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+                <RegistrationModal
+                    isOpen={showRegistration}
+                    onClose={() => setShowRegistration(false)}
+                    onRegister={handleRegister}
+                />
+            </>
+        );
+    }
+
+    if (!userData) return null;
+
+    const winRate = userData.stats
+        ? formatWinRate(userData.stats.winRate)
+        : "0%";
 
     return (
         <div className="min-h-screen bg-black text-white p-4 pb-20 lg:pb-4">
@@ -78,17 +207,19 @@ export function Dashboard() {
                     />
                     <div>
                         <h1 className="text-xl font-brutal text-text">
-                            {player.displayName}
+                            {userData.username || "USER"}
                         </h1>
                         <p className="text-sm font-mono-brutal text-text-body">
-                            LEVEL {player.level} • {player.experiencePoints.toLocaleString()} XP
+                            {userData.stats
+                                ? `${userData.stats.totalPredictions} PREDICTIONS • ${winRate} WIN RATE`
+                                : "NO PREDICTIONS YET"}
                         </p>
                     </div>
                 </div>
 
                 <div className="text-right">
                     <p className="text-2xl font-brutal text-primary">
-                        {player.tokenBalance.toLocaleString()} PTS
+                        {formatPoints(userData.points)}
                     </p>
                     <p className="text-sm font-mono-brutal text-text-body">
                         POINT BALANCE
@@ -98,378 +229,268 @@ export function Dashboard() {
 
             {/* Main Content */}
             <div className="max-w-7xl mx-auto space-y-6 lg:grid lg:grid-cols-12 lg:gap-6 lg:space-y-0">
-                {/* Total Profit Card */}
+                {/* Points Overview */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="card-brutal lg:col-span-8 border"
+                    className="card-brutal lg:col-span-8 border-2 border-primary"
                 >
                     <div className="text-center lg:text-left">
                         <h2 className="text-3xl font-brutal text-primary mb-2">
-                            {totalProfit >= 0 ? "+" : ""}
-                            {totalProfit.toLocaleString()} PTS
+                            {formatPoints(userData.earnedPoints)}
                         </h2>
                         <p className="font-mono-brutal text-white mb-4">
-                            TOTAL PROFIT
+                            EARNED POINTS
                         </p>
 
-                        <div className="flex items-center justify-center lg:justify-start gap-2">
-                            {totalProfit >= 0 ? (
-                                <TrendingUp className="text-success" size={20} />
-                            ) : (
-                                <TrendingDown className="text-danger" size={20} />
-                            )}
-                            <span
-                                className={`text-lg font-brutal ${
-                                    totalProfit >= 0 ? "text-success" : "text-danger"
-                                }`}
-                            >
-                                {totalProfit >= 0 ? "+" : ""}
-                                {totalProfit.toLocaleString()} POINTS
-                            </span>
+                        <div className="bg-black border border-primary p-4 mb-4">
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p className="font-mono-brutal text-white mb-1">
+                                        TOTAL POINTS
+                                    </p>
+                                    <p className="font-brutal text-primary text-lg">
+                                        {formatPoints(userData.points)}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="font-mono-brutal text-white mb-1">
+                                        CAN SELL
+                                    </p>
+                                    <p
+                                        className={`font-brutal text-lg ${
+                                            userData.canSell
+                                                ? "text-success"
+                                                : "text-danger"
+                                        }`}
+                                    >
+                                        {userData.canSell ? "YES" : "NO"}
+                                    </p>
+                                    {!userData.canSell && (
+                                        <p className="text-xs font-mono-brutal text-white mt-1">
+                                            Need 10,000 earned points
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
-                            <div>
-                                <p className="font-mono-brutal text-white">
-                                    EARNED
-                                </p>
-                                <p className="font-brutal text-primary">
-                                    {player.totalEarned.toLocaleString()}
-                                </p>
+                        {userData.stats && (
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <p className="font-mono-brutal text-white">
+                                        WINS
+                                    </p>
+                                    <p className="font-brutal text-success text-lg">
+                                        {userData.stats.wins}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="font-mono-brutal text-white">
+                                        LOSSES
+                                    </p>
+                                    <p className="font-brutal text-danger text-lg">
+                                        {userData.stats.losses}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="font-mono-brutal text-white">
+                                        TOTAL EARNED
+                                    </p>
+                                    <p className="font-brutal text-primary text-lg">
+                                        {formatPoints(
+                                            userData.stats.totalPointsEarned
+                                        )}
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-mono-brutal text-white">
-                                    SPENT
-                                </p>
-                                <p className="font-brutal text-accent">
-                                    {player.totalSpent.toLocaleString()}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="font-mono-brutal text-white">
-                                    REPUTATION
-                                </p>
-                                <p className="font-brutal text-primary">
-                                    {player.reputation}
-                                </p>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </motion.div>
 
-                {/* XP Progress Bar */}
+                {/* Win Rate Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="card-brutal lg:col-span-4 border"
+                    className="card-brutal lg:col-span-4 border-2 border-accent"
                 >
                     <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-lg font-brutal text-primary">
-                            EXPERIENCE
+                        <h3 className="text-lg font-brutal text-accent">
+                            WIN RATE
                         </h3>
-                        <span className="text-sm font-mono-brutal text-white">
-                            {player.experiencePoints.toLocaleString()} XP
-                        </span>
+                        <Trophy className="text-accent" size={24} />
                     </div>
 
-                    <div className="w-full bg-black border h-6">
-                        <motion.div
-                            className="bg-accent h-full border border-accent"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${Math.min(xpProgress, 100)}%` }}
-                            transition={{ duration: 1, delay: 0.5 }}
-                        />
-                    </div>
+                    {userData.stats ? (
+                        <>
+                            <div className="text-center mb-4">
+                                <p className="text-4xl font-brutal text-accent">
+                                    {winRate}
+                                </p>
+                                <p className="text-xs font-mono-brutal text-white mt-1">
+                                    {userData.stats.wins} WINS /{" "}
+                                    {userData.stats.totalPredictions} TOTAL
+                                </p>
+                            </div>
 
-                    <p className="text-sm font-mono-brutal text-white mt-2">
-                        {xpForNextLevel.toLocaleString()} XP TO NEXT LEVEL
-                    </p>
+                            <div className="w-full bg-black border h-4">
+                                <motion.div
+                                    className="bg-accent h-full border border-accent"
+                                    initial={{ width: 0 }}
+                                    animate={{
+                                        width: `${
+                                            (userData.stats.winRate / 10000) *
+                                            100
+                                        }%`,
+                                    }}
+                                    transition={{ duration: 1, delay: 0.5 }}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="text-center py-8">
+                            <Target size={32} className="mx-auto mb-2 text-white" />
+                            <p className="font-mono-brutal text-white text-sm">
+                                NO STATS YET
+                            </p>
+                        </div>
+                    )}
                 </motion.div>
 
-                {/* Current Market Price */}
+                {/* Active Stakes */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
-                    className="card-brutal lg:col-span-6 border"
-                >
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-brutal text-primary">
-                            CURRENT PRICE
-                        </h3>
-                        <span className="text-xs font-mono-brutal text-white">
-                            BTC
-                        </span>
-                    </div>
-                    <div className="text-center">
-                        <p className="text-3xl font-brutal text-primary">
-                            {currentMarketPrice.price.toLocaleString()} PTS
-                        </p>
-                        <p className="text-sm font-mono-brutal text-white mt-2">
-                            Last updated: {new Date(currentMarketPrice.timestamp).toLocaleTimeString()}
-                        </p>
-                    </div>
-                </motion.div>
-
-                {/* Daily Reward */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="card-brutal lg:col-span-6 border"
+                    className="card-brutal lg:col-span-12 border-2"
                 >
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-brutal text-primary flex items-center gap-2">
-                            <Gift className="text-primary" size={20} />
-                            DAILY REWARD
-                        </h3>
-                    </div>
-                    <div className="text-center">
-                        <p className="text-sm font-mono-brutal text-white mb-3">
-                            Claim 10 points every 24 hours
-                        </p>
-                        <button
-                            onClick={claimDailyReward}
-                            disabled={!canClaimDailyReward}
-                            className={`btn-brutal ${
-                                !canClaimDailyReward
-                                    ? "opacity-50 cursor-not-allowed"
-                                    : ""
-                            }`}
-                        >
-                            CLAIM REWARD
-                        </button>
-                    </div>
-                </motion.div>
-
-                {/* Price Predictions */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.25 }}
-                    className="card-brutal lg:col-span-6 border"
-                >
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-brutal text-primary flex items-center gap-2">
-                            <Calendar className="text-primary" size={20} />
-                            PRICE PREDICTIONS
-                        </h3>
-                        <button
-                            onClick={() => setShowPredictionModal(true)}
-                            className="text-accent hover:text-primary font-brutal transition-none text-sm"
-                        >
-                            MAKE PREDICTION
-                        </button>
-                    </div>
-
-                    {activePredictions.length > 0 ? (
-                        <div className="space-y-3">
-                            {activePredictions.slice(0, 3).map((prediction, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-black border p-3 flex items-center justify-between"
-                                >
-                                    <div>
-                                        <p className="font-brutal text-primary">
-                                            {prediction.period} Prediction
-                                        </p>
-                                        <p className="text-sm font-mono-brutal text-white">
-                                            {prediction.outcome}
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-xs font-mono-brutal text-white">
-                                            {prediction.period === "Daily"
-                                                ? "100 PTS"
-                                                : prediction.period === "Weekly"
-                                                ? "500 PTS"
-                                                : "1000 PTS"}
-                                        </p>
-                                        <p className="text-xs font-mono-brutal text-text-body">
-                                            Reward
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-6 text-white">
-                            <Calendar size={32} className="mx-auto mb-2" />
-                            <p className="font-mono-brutal text-sm">
-                                NO ACTIVE PREDICTIONS
-                            </p>
-                        </div>
-                    )}
-                </motion.div>
-
-                {/* Badges Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="card-brutal lg:col-span-6 border"
-                >
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-brutal text-primary flex items-center gap-2">
-                            <Trophy className="text-primary" size={20} />
-                            RECENT ACHIEVEMENTS
+                            <Target className="text-primary" size={20} />
+                            ACTIVE STAKES
                         </h3>
                         <Link
-                            to="/app/leaderboard"
-                            className="text-accent hover:text-primary font-brutal transition-none text-sm"
+                            to="/app/markets"
+                            className="text-accent hover:text-primary font-brutal transition-none text-sm flex items-center gap-1"
                         >
                             VIEW ALL
+                            <ArrowRight size={16} />
                         </Link>
                     </div>
 
-                    {recentAchievements.length > 0 ? (
-                        <div className="grid grid-cols-3 gap-4">
-                            {recentAchievements.map((achievement, index) => (
+                    {activeStakes.length > 0 ? (
+                        <div className="space-y-3">
+                            {activeStakes.map((stake, index) => (
                                 <motion.div
-                                    key={achievement.id}
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: 0.4 + index * 0.1 }}
-                                    className="bg-primary p-3 text-center border-2 border-primary"
+                                    key={stake.eventId}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 + index * 0.1 }}
+                                    className="bg-black border-2 border-white p-4 flex items-center justify-between"
                                 >
-                                    <div className="text-2xl mb-1 font-brutal">
-                                        {achievement.icon}
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            {stake.status === "open" ? (
+                                                <Clock className="text-accent" size={20} />
+                                            ) : stake.status === "resolved" ? (
+                                                <CheckCircle2 className="text-success" size={20} />
+                                            ) : (
+                                                <XCircle className="text-danger" size={20} />
+                                            )}
+                                            <h4 className="font-brutal text-primary">
+                                                {stake.eventMetadata}
+                                            </h4>
+                                        </div>
+                                        <div className="flex items-center gap-4 text-sm">
+                                            <span
+                                                className={`font-brutal px-2 py-1 border ${
+                                                    stake.stakeType === "yes"
+                                                        ? "bg-success/20 border-success text-success"
+                                                        : "bg-danger/20 border-danger text-danger"
+                                                }`}
+                                            >
+                                                {stake.stakeType.toUpperCase()}
+                                            </span>
+                                            <span className="font-mono-brutal text-white">
+                                                {formatPoints(stake.amount)} STAKED
+                                            </span>
+                                            <span
+                                                className={`font-mono-brutal ${
+                                                    stake.status === "open"
+                                                        ? "text-accent"
+                                                        : stake.status === "resolved"
+                                                        ? "text-success"
+                                                        : "text-danger"
+                                                }`}
+                                            >
+                                                {stake.status.toUpperCase()}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <p className="text-xs font-brutal text-background">
-                                        {achievement.name}
-                                    </p>
+                                    {stake.status === "resolved" && (
+                                        <Link
+                                            to={`/app/markets?event=${stake.eventId}`}
+                                            className="btn-brutal px-4 py-2"
+                                        >
+                                            CLAIM
+                                        </Link>
+                                    )}
                                 </motion.div>
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-8 text-white">
-                            <Star size={32} className="mx-auto mb-2" />
-                            <p className="font-mono-brutal text-sm">
-                                NO ACHIEVEMENTS YET. START PLAYING TO EARN YOUR FIRST
-                                ACHIEVEMENT!
+                        <div className="text-center py-12 text-white">
+                            <Target size={48} className="mx-auto mb-4 text-primary" />
+                            <h3 className="text-lg font-brutal mb-2 text-primary">
+                                NO ACTIVE STAKES
+                            </h3>
+                            <p className="font-mono-brutal mb-4">
+                                START STAKING ON EVENTS TO EARN REWARDS
                             </p>
+                            <Link
+                                to="/app/markets"
+                                className="btn-brutal inline-flex items-center gap-2"
+                            >
+                                VIEW EVENTS
+                                <ArrowRight size={20} />
+                            </Link>
                         </div>
                     )}
                 </motion.div>
 
-                {/* Quick Stats */}
+                {/* Quick Actions */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 }}
+                    transition={{ delay: 0.25 }}
                     className="grid grid-cols-2 gap-4 lg:col-span-12"
-                >
-                    <div className="card-brutal border">
-                        <h4 className="text-sm font-mono-brutal text-white mb-1">
-                            MARKETS PARTICIPATED
-                        </h4>
-                        <p className="text-xl font-brutal text-primary">
-                            {player.marketsParticipated}
-                        </p>
-                    </div>
-
-                    <div className="card-brutal border">
-                        <h4 className="text-sm font-mono-brutal text-white mb-1">
-                            WIN STREAK
-                        </h4>
-                        <p className="text-xl font-brutal text-primary">
-                            {player.winStreak}
-                        </p>
-                    </div>
-                </motion.div>
-
-                {/* View Markets Button */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="pt-4 lg:col-span-12"
                 >
                     <Link
                         to="/app/markets"
-                        className="w-full lg:w-auto lg:inline-flex btn-brutal flex items-center justify-center gap-2"
+                        className="card-brutal border-2 border-primary p-6 text-center hover:bg-primary hover:text-black transition-none group"
                     >
-                        VIEW MARKETS
-                        <ArrowRight size={20} />
+                        <Target className="text-primary group-hover:text-black mx-auto mb-3" size={32} />
+                        <h4 className="font-brutal text-lg mb-2">PREDICT</h4>
+                        <p className="text-xs font-mono-brutal">
+                            STAKE ON EVENTS
+                        </p>
                     </Link>
+
+                    {userData.canSell && (
+                        <Link
+                            to="/app/marketplace"
+                            className="card-brutal border-2 border-accent p-6 text-center hover:bg-accent hover:text-black transition-none group"
+                        >
+                            <Coins className="text-accent group-hover:text-black mx-auto mb-3" size={32} />
+                            <h4 className="font-brutal text-lg mb-2">MARKETPLACE</h4>
+                            <p className="text-xs font-mono-brutal">
+                                SELL POINTS
+                            </p>
+                        </Link>
+                    )}
                 </motion.div>
             </div>
-
-            {/* Prediction Modal */}
-            {showPredictionModal && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-                    onClick={() => setShowPredictionModal(false)}
-                >
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        className="card-brutal w-full max-w-md"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <h3 className="text-lg font-brutal text-primary mb-4">
-                            MAKE PRICE PREDICTION
-                        </h3>
-
-                        <div className="mb-4">
-                            <label className="block text-sm font-brutal text-white mb-2">
-                                PERIOD
-                            </label>
-                            <div className="flex gap-2">
-                                {(["Daily", "Weekly", "Monthly"] as const).map((period) => (
-                                    <button
-                                        key={period}
-                                        onClick={() => setPredictionPeriod(period)}
-                                        className={`flex-1 py-2 px-4 border-brutal font-brutal transition-none ${
-                                            predictionPeriod === period
-                                                ? "bg-primary text-black"
-                                                : "bg-black text-white hover:bg-white hover:text-black"
-                                        }`}
-                                    >
-                                        {period}
-                                    </button>
-                                ))}
-                            </div>
-                            <p className="text-xs font-mono-brutal text-white mt-2">
-                                Reward:{" "}
-                                {predictionPeriod === "Daily"
-                                    ? "100 PTS"
-                                    : predictionPeriod === "Weekly"
-                                    ? "500 PTS"
-                                    : "1000 PTS"}
-                            </p>
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-sm font-brutal text-white mb-2">
-                                PREDICT OUTCOME
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {(["Rise", "Fall", "Neutral"] as const).map((outcome) => (
-                                    <button
-                                        key={outcome}
-                                        onClick={() => handlePredict(outcome)}
-                                        className="py-3 px-4 border-brutal font-brutal bg-black text-white hover:bg-primary hover:text-black transition-none"
-                                    >
-                                        {outcome}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => setShowPredictionModal(false)}
-                            className="w-full py-3 px-4 bg-black text-white border-brutal font-brutal hover:bg-white hover:text-black transition-none"
-                        >
-                            CANCEL
-                        </button>
-                    </motion.div>
-                </motion.div>
-            )}
         </div>
     );
 }

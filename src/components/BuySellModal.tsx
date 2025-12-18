@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    LuX as X,
-    LuTrendingUp as TrendingUp,
-    LuTrendingDown as TrendingDown,
-} from "react-icons/lu";
+    X,
+    TrendingUp,
+    TrendingDown,
+} from "lucide-react";
 import { useGameStore } from "@/store/gameStore";
 import type { Market } from "@/store/gameStore";
 

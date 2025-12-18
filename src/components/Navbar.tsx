@@ -1,18 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-    LuHouse as Home,
-    LuTrendingUp as TrendingUp,
-    LuBriefcase as Briefcase,
-    LuTrophy as Trophy,
-    LuUsers as Users,
-    LuUser as User,
-} from "react-icons/lu";
+    Home,
+    TrendingUp,
+    Briefcase,
+    Trophy,
+    Users,
+    User,
+    Coins,
+} from "lucide-react";
 import { cn } from "@/utils/cn";
 import logo from "@/assets/roxy-logo.png";
 
 const navItems = [
     { path: "/app", icon: Home, label: "Dashboard" },
-    { path: "/app/markets", icon: TrendingUp, label: "Markets" },
+    { path: "/app/markets", icon: TrendingUp, label: "Events" },
+    { path: "/app/marketplace", icon: Coins, label: "Marketplace" },
     { path: "/app/portfolio", icon: Briefcase, label: "Portfolio" },
     { path: "/app/leaderboard", icon: Trophy, label: "Leaderboard" },
     { path: "/app/guilds", icon: Users, label: "Guilds" },

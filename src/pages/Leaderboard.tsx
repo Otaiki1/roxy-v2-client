@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { motion } from "framer-motion";
 import {
-    LuTrophy as Trophy,
-    LuCrown as Crown,
-    LuStar as Star,
-    LuUsers as Users,
-} from "react-icons/lu";
+    Trophy,
+    Crown,
+    Star,
+    Users,
+} from "lucide-react";
 
 export function Leaderboard() {
     const { globalLeaderboard, guildLeaderboard } = useGameStore();

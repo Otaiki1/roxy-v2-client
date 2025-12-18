@@ -117,10 +117,10 @@ export function Dashboard() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
                 <div className="text-center">
                     <div className="w-16 h-16 border-2 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
-                    <p className="font-mono-brutal text-white">LOADING...</p>
+                    <p className="font-mono-brutal" style={{ color: 'var(--color-text)' }}>LOADING...</p>
                 </div>
             </div>
         );
@@ -196,9 +196,9 @@ export function Dashboard() {
         : "0%";
 
     return (
-        <div className="min-h-screen bg-black text-white p-4 pb-20 lg:pb-4">
+        <div className="min-h-screen p-4 pb-20 lg:pb-4" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
             {/* Top Bar */}
-            <div className="flex justify-between items-center mb-8 max-w-7xl mx-auto border-b-2 border-accent pb-4">
+            <div className="flex justify-between items-center mb-8 max-w-7xl mx-auto border-b border-brutal pb-4">
                 <div className="flex items-center gap-4">
                     <img
                         src={logo}
@@ -239,14 +239,14 @@ export function Dashboard() {
                         <h2 className="text-3xl font-brutal text-primary mb-2">
                             {formatPoints(userData.earnedPoints)}
                         </h2>
-                        <p className="font-mono-brutal text-white mb-4">
+                        <p className="font-mono-brutal mb-4" style={{ color: 'var(--color-text-body)' }}>
                             EARNED POINTS
                         </p>
 
-                        <div className="bg-black border border-primary p-4 mb-4">
+                        <div className="border border-brutal p-4 mb-4" style={{ backgroundColor: 'var(--color-elevated)' }}>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p className="font-mono-brutal text-white mb-1">
+                                    <p className="font-mono-brutal mb-1" style={{ color: 'var(--color-text-body)' }}>
                                         TOTAL POINTS
                                     </p>
                                     <p className="font-brutal text-primary text-lg">
@@ -254,7 +254,7 @@ export function Dashboard() {
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="font-mono-brutal text-white mb-1">
+                                    <p className="font-mono-brutal mb-1" style={{ color: 'var(--color-text-body)' }}>
                                         CAN SELL
                                     </p>
                                     <p
@@ -267,7 +267,7 @@ export function Dashboard() {
                                         {userData.canSell ? "YES" : "NO"}
                                     </p>
                                     {!userData.canSell && (
-                                        <p className="text-xs font-mono-brutal text-white mt-1">
+                                        <p className="text-xs font-mono-brutal mt-1" style={{ color: 'var(--color-text-muted)' }}>
                                             Need 10,000 earned points
                                         </p>
                                     )}
@@ -278,7 +278,7 @@ export function Dashboard() {
                         {userData.stats && (
                             <div className="grid grid-cols-3 gap-4 text-sm">
                                 <div>
-                                    <p className="font-mono-brutal text-white">
+                                    <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         WINS
                                     </p>
                                     <p className="font-brutal text-success text-lg">
@@ -286,7 +286,7 @@ export function Dashboard() {
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="font-mono-brutal text-white">
+                                    <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         LOSSES
                                     </p>
                                     <p className="font-brutal text-danger text-lg">
@@ -294,7 +294,7 @@ export function Dashboard() {
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="font-mono-brutal text-white">
+                                    <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                         TOTAL EARNED
                                     </p>
                                     <p className="font-brutal text-primary text-lg">
@@ -313,13 +313,14 @@ export function Dashboard() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="card-brutal lg:col-span-4 border-2 border-accent"
+                    className="card-brutal lg:col-span-4 border-2"
+                    style={{ borderColor: 'var(--color-accent)' }}
                 >
                     <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-lg font-brutal text-accent">
+                        <h3 className="text-lg font-brutal" style={{ color: 'var(--color-accent)' }}>
                             WIN RATE
                         </h3>
-                        <Trophy className="text-accent" size={24} />
+                        <Trophy size={24} style={{ color: 'var(--color-accent)' }} />
                     </div>
 
                     {userData.stats ? (
@@ -334,9 +335,10 @@ export function Dashboard() {
                                 </p>
                             </div>
 
-                            <div className="w-full bg-black border h-4">
+                            <div className="w-full border h-4" style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}>
                                 <motion.div
-                                    className="bg-accent h-full border border-accent"
+                                    className="h-full border"
+                                    style={{ backgroundColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' }}
                                     initial={{ width: 0 }}
                                     animate={{
                                         width: `${
@@ -348,14 +350,14 @@ export function Dashboard() {
                                 />
                             </div>
                         </>
-                    ) : (
-                        <div className="text-center py-8">
-                            <Target size={32} className="mx-auto mb-2 text-white" />
-                            <p className="font-mono-brutal text-white text-sm">
-                                NO STATS YET
-                            </p>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="text-center py-8">
+                                <Target size={32} className="mx-auto mb-2" style={{ color: 'var(--color-text-muted)' }} />
+                                <p className="font-mono-brutal text-sm" style={{ color: 'var(--color-text-body)' }}>
+                                    NO STATS YET
+                                </p>
+                            </div>
+                        )}
                 </motion.div>
 
                 {/* Active Stakes */}
@@ -387,7 +389,8 @@ export function Dashboard() {
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.2 + index * 0.1 }}
-                                    className="bg-black border-2 border-white p-4 flex items-center justify-between"
+                                    className="border-2 p-4 flex items-center justify-between"
+                                    style={{ backgroundColor: 'var(--color-elevated)', borderColor: 'var(--color-border)' }}
                                 >
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
@@ -439,24 +442,24 @@ export function Dashboard() {
                                 </motion.div>
                             ))}
                         </div>
-                    ) : (
-                        <div className="text-center py-12 text-white">
-                            <Target size={48} className="mx-auto mb-4 text-primary" />
-                            <h3 className="text-lg font-brutal mb-2 text-primary">
-                                NO ACTIVE STAKES
-                            </h3>
-                            <p className="font-mono-brutal mb-4">
-                                START STAKING ON EVENTS TO EARN REWARDS
-                            </p>
-                            <Link
-                                to="/app/markets"
-                                className="btn-brutal inline-flex items-center gap-2"
-                            >
-                                VIEW EVENTS
-                                <ArrowRight size={20} />
-                            </Link>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="text-center py-12" style={{ color: 'var(--color-text)' }}>
+                                <Target size={48} className="mx-auto mb-4 text-primary" />
+                                <h3 className="text-lg font-brutal mb-2 text-primary">
+                                    NO ACTIVE STAKES
+                                </h3>
+                                <p className="font-mono-brutal mb-4" style={{ color: 'var(--color-text-body)' }}>
+                                    START STAKING ON EVENTS TO EARN REWARDS
+                                </p>
+                                <Link
+                                    to="/app/markets"
+                                    className="btn-brutal inline-flex items-center gap-2"
+                                >
+                                    VIEW EVENTS
+                                    <ArrowRight size={20} />
+                                </Link>
+                            </div>
+                        )}
                 </motion.div>
 
                 {/* Quick Actions */}
@@ -468,11 +471,12 @@ export function Dashboard() {
                 >
                     <Link
                         to="/app/markets"
-                        className="card-brutal border-2 border-primary p-6 text-center hover:bg-primary hover:text-black transition-none group"
+                        className="card-brutal border-2 p-6 text-center transition-colors group"
+                        style={{ borderColor: 'var(--color-primary)' }}
                     >
-                        <Target className="text-primary group-hover:text-black mx-auto mb-3" size={32} />
-                        <h4 className="font-brutal text-lg mb-2">PREDICT</h4>
-                        <p className="text-xs font-mono-brutal">
+                        <Target className="mx-auto mb-3 group-hover:opacity-80" size={32} style={{ color: 'var(--color-primary)' }} />
+                        <h4 className="font-brutal text-lg mb-2" style={{ color: 'var(--color-text)' }}>PREDICT</h4>
+                        <p className="text-xs font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                             STAKE ON EVENTS
                         </p>
                     </Link>
@@ -480,11 +484,12 @@ export function Dashboard() {
                     {userData.canSell && (
                         <Link
                             to="/app/marketplace"
-                            className="card-brutal border-2 border-accent p-6 text-center hover:bg-accent hover:text-black transition-none group"
+                            className="card-brutal border-2 p-6 text-center transition-colors group"
+                            style={{ borderColor: 'var(--color-primary)' }}
                         >
-                            <Coins className="text-accent group-hover:text-black mx-auto mb-3" size={32} />
-                            <h4 className="font-brutal text-lg mb-2">MARKETPLACE</h4>
-                            <p className="text-xs font-mono-brutal">
+                            <Coins className="mx-auto mb-3 group-hover:opacity-80" size={32} style={{ color: 'var(--color-primary)' }} />
+                            <h4 className="font-brutal text-lg mb-2" style={{ color: 'var(--color-text)' }}>MARKETPLACE</h4>
+                            <p className="text-xs font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                 SELL POINTS
                             </p>
                         </Link>

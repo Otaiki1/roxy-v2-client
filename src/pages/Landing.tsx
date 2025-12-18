@@ -56,7 +56,7 @@ export function Landing() {
     ];
 
     return (
-        <div className="min-h-screen bg-black text-white overflow-hidden">
+        <div className="min-h-screen overflow-hidden" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}>
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center justify-center">
                 {/* Background Elements */}
@@ -112,17 +112,17 @@ export function Landing() {
                             </div>
                         </div>
 
-                        <h2 className="text-5xl font-brutal text-white mb-6 leading-tight">
+                        <h2 className="text-5xl font-brutal mb-6 leading-tight" style={{ color: 'var(--color-text)' }}>
                             BITCOIN L2
                             <br />
-                            <span className="text-accent">PREDICTION MARKET</span>
+                            <span style={{ color: 'var(--color-primary)' }}>PREDICTION MARKET</span>
                         </h2>
 
                         <div className="space-y-4 mb-8 ">
-                            <p className="text-2xl font-mono-brutal text-text-body leading-relaxed">
+                            <p className="text-2xl font-mono-brutal leading-relaxed" style={{ color: 'var(--color-text-body)' }}>
                                 Predict outcomes. Stake points. Win rewards.
                             </p>
-                            <p className="text-xl font-mono-brutal text-text-body leading-relaxed">
+                            <p className="text-xl font-mono-brutal leading-relaxed" style={{ color: 'var(--color-text-body)' }}>
                                 Earn points through predictions. Trade on the marketplace. Join guilds for collaborative staking.
                             </p>
                         </div>
@@ -211,7 +211,7 @@ export function Landing() {
             </section>
 
             {/* Features Section */}
-            <section className="py-20 bg-card">
+            <section className="py-20" style={{ backgroundColor: 'var(--color-card)' }}>
                 <div className="max-w-7xl mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -222,8 +222,8 @@ export function Landing() {
                         <h2 className="text-5xl font-brutal text-primary mb-4">
                             WHY CHOOSE ROXY?
                         </h2>
-                        <p className="text-xl font-mono-brutal text-text-body mx-auto">
-                            Experience the future of crypto trading with our
+                        <p className="text-xl font-mono-brutal mx-auto" style={{ color: 'var(--color-text-body)' }}>
+                            Experience the future of prediction markets with our
                             revolutionary platform
                         </p>
                     </motion.div>
@@ -238,9 +238,10 @@ export function Landing() {
                                     duration: 0.6,
                                     delay: index * 0.1,
                                 }}
-                                className="bg-black border-2 border-primary p-6 text-center hover:border-accent transition-none group"
+                                className="border-2 p-6 text-center transition-colors group"
+                                style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-primary)' }}
                             >
-                                <div className="w-16 h-16 bg-primary border-2 border-primary flex items-center justify-center mx-auto mb-4 group-hover:bg-accent group-hover:border-accent transition-none">
+                                <div className="w-16 h-16 bg-primary border-2 border-primary flex items-center justify-center mx-auto mb-4 transition-colors">
                                     <feature.icon
                                         className="text-black"
                                         size={32}
@@ -249,7 +250,7 @@ export function Landing() {
                                 <h3 className="text-xl font-brutal text-primary mb-3">
                                     {feature.title}
                                 </h3>
-                                <p className="font-mono-brutal text-text-body">
+                                <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     {feature.description}
                                 </p>
                             </motion.div>
@@ -290,7 +291,7 @@ export function Landing() {
                                 <div className="text-4xl font-brutal text-primary mb-2">
                                     {stat.number}
                                 </div>
-                                <div className="font-mono-brutal text-text-body">
+                                <div className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                     {stat.label}
                                 </div>
                             </motion.div>
@@ -300,7 +301,7 @@ export function Landing() {
             </section>
 
             {/* Character Showcase */}
-            <section className="py-20 bg-card">
+            <section className="py-20" style={{ backgroundColor: 'var(--color-card)' }}>
                 <div className="max-w-7xl mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -311,7 +312,7 @@ export function Landing() {
                         <h2 className="text-5xl font-brutal text-primary mb-4">
                             MEET THE CHARACTERS
                         </h2>
-                        <p className="text-xl font-mono-brutal text-text-body">
+                        <p className="text-xl font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                             Discover the personalities that make Roxy unique
                         </p>
                     </motion.div>
@@ -343,7 +344,7 @@ export function Landing() {
                             <h3 className="text-2xl font-brutal text-primary mb-2">
                                 ROXY 33
                             </h3>
-                            <p className="font-mono-brutal text-text-body">
+                            <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                 The strategic mastermind with lightning-fast
                                 reflexes
                             </p>
@@ -359,7 +360,8 @@ export function Landing() {
                                 <img
                                     src={roxy44}
                                     alt="Roxy Character 44"
-                                    className="w-48 h-48 mx-auto object-contain border-2 border-accent"
+                                    className="w-48 h-48 mx-auto object-contain border-2"
+                                    style={{ borderColor: 'var(--color-primary)' }}
                                 />
                                 <motion.div
                                     className="absolute -top-4 -right-4 w-12 h-12 bg-primary border-2 border-primary flex items-center justify-center"
@@ -372,10 +374,10 @@ export function Landing() {
                                     <Target className="text-black" size={24} />
                                 </motion.div>
                             </div>
-                            <h3 className="text-2xl font-brutal text-accent mb-2">
+                            <h3 className="text-2xl font-brutal mb-2" style={{ color: 'var(--color-primary)' }}>
                                 ROXY 44
                             </h3>
-                            <p className="font-mono-brutal text-text-body">
+                            <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                 The precision trader with unmatched accuracy
                             </p>
                         </motion.div>
@@ -390,10 +392,11 @@ export function Landing() {
                                 <img
                                     src={roxyMain}
                                     alt="Roxy Character"
-                                    className="w-48 h-48 mx-auto object-contain border-2 border-primary"
+                                    className="w-48 h-48 mx-auto object-contain border-2"
+                                    style={{ borderColor: 'var(--color-primary)' }}
                                 />
                                 <motion.div
-                                    className="absolute -top-4 -right-4 w-12 h-12 bg-accent border-2 border-accent flex items-center justify-center"
+                                    className="absolute -top-4 -right-4 w-12 h-12 bg-primary border-2 border-primary flex items-center justify-center"
                                     animate={{ rotate: [0, 360] }}
                                     transition={{
                                         duration: 3,
@@ -407,7 +410,7 @@ export function Landing() {
                             <h3 className="text-2xl font-brutal text-primary mb-2">
                                 ROXY
                             </h3>
-                            <p className="font-mono-brutal text-text-body">
+                            <p className="font-mono-brutal" style={{ color: 'var(--color-text-body)' }}>
                                 The legendary trader with unmatched charisma and
                                 skill
                             </p>
@@ -427,9 +430,9 @@ export function Landing() {
                         <h2 className="text-6xl font-brutal text-primary mb-6">
                             READY TO DOMINATE?
                         </h2>
-                        <p className="text-2xl font-mono-brutal text-text-body mb-8">
-                            Join thousands of traders already building their
-                            crypto empires
+                        <p className="text-2xl font-mono-brutal mb-8" style={{ color: 'var(--color-text-body)' }}>
+                            Join thousands of predictors already building their
+                            prediction portfolios
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -446,7 +449,8 @@ export function Landing() {
 
                             <Link
                                 to="/app/leaderboard"
-                                className="border-2 border-accent text-accent hover:bg-accent hover:text-black font-brutal text-xl px-12 py-6 transition-none flex items-center justify-center gap-3"
+                                className="border-2 font-brutal text-xl px-12 py-6 transition-colors flex items-center justify-center gap-3 btn-secondary"
+                                style={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
                             >
                                 <Trophy size={24} />
                                 VIEW LEADERBOARD
@@ -457,7 +461,7 @@ export function Landing() {
             </section>
 
             {/* Footer */}
-            <footer className="py-12 bg-card border-t-2 border-primary">
+            <footer className="py-12 border-t-2" style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-primary)' }}>
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <div className="flex items-center justify-center gap-4 mb-6">
                         <img
@@ -469,37 +473,49 @@ export function Landing() {
                             ROXY
                         </h3>
                     </div>
-                    <p className="font-mono-brutal text-text-body mb-4">
+                    <p className="font-mono-brutal mb-4" style={{ color: 'var(--color-text-body)' }}>
                         Decentralized prediction markets on Bitcoin L2
                     </p>
                     <div className="flex justify-center gap-8">
                         <Link
                             to="/app"
-                            className="font-brutal text-primary hover:text-accent transition-none"
+                            className="font-brutal transition-colors"
+                            style={{ color: 'var(--color-primary)' }}
                         >
                             DASHBOARD
                         </Link>
                         <Link
                             to="/app/markets"
-                            className="font-brutal text-primary hover:text-accent transition-none"
+                            className="font-brutal transition-colors"
+                            style={{ color: 'var(--color-primary)' }}
                         >
-                            MARKETS
+                            EVENTS
+                        </Link>
+                        <Link
+                            to="/app/marketplace"
+                            className="font-brutal transition-colors"
+                            style={{ color: 'var(--color-primary)' }}
+                        >
+                            MARKETPLACE
                         </Link>
                         <Link
                             to="/app/portfolio"
-                            className="font-brutal text-primary hover:text-accent transition-none"
+                            className="font-brutal transition-colors"
+                            style={{ color: 'var(--color-primary)' }}
                         >
                             PORTFOLIO
                         </Link>
                         <Link
                             to="/app/leaderboard"
-                            className="font-brutal text-primary hover:text-accent transition-none"
+                            className="font-brutal transition-colors"
+                            style={{ color: 'var(--color-primary)' }}
                         >
                             LEADERBOARD
                         </Link>
                         <Link
                             to="/app/guilds"
-                            className="font-brutal text-primary hover:text-accent transition-none"
+                            className="font-brutal transition-colors"
+                            style={{ color: 'var(--color-primary)' }}
                         >
                             GUILDS
                         </Link>
